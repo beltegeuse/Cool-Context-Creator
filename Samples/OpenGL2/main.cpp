@@ -52,17 +52,23 @@ void DisplayCube()
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	std::cout << "Lancement ..." << std::endl;
+
+	// Object Creation
 	Window win;
 	WindowMode mode(800,600);
+	OpenGLContextSettings openGLSettings(2,1);
+	// Create the window
 	std::cout << "Creation ..." << std::endl;
-	win.Create(mode,"OpenGL2");
+	win.Create(mode,"OpenGL2",openGLSettings);
 
+	// Initialise OpenGL
 	glMatrixMode( GL_PROJECTION );
 	glLoadIdentity();
 	gluPerspective(70,(double)640/480,1,1000);
 
 	glEnable(GL_DEPTH_TEST);
 
+	// Draw loop
 	std::cout << "Affichage ..." << std::endl;
 	while(win.IsOpened())
 	{
@@ -86,6 +92,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 			}
 		}
 
+		// Draw the scene
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
 		glMatrixMode( GL_MODELVIEW );
@@ -95,7 +102,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 		DisplayCube();
 
-
+		// Swap buffers
 		win.Display();
 	}
 
