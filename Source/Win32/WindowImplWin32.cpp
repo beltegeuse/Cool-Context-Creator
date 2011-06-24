@@ -4,6 +4,7 @@
 #include <GL/wglew.h>
 
 #include <iostream>
+#include <Trace.h>
 
 namespace PCM
 {
@@ -180,6 +181,7 @@ WindowImplWin32::WindowImplWin32(const WindowMode& mode,
 		throw new CException("Impossible to initialize GLEW.");
 	}
 
+	TRACE("WindowImplWin32::WindowImplWin32 : OpenGL context Creation : " << settings.MajorVersion << "." << settings.MinorVersion);
 	int attribs[] =
 	{ WGL_CONTEXT_MAJOR_VERSION_ARB, settings.MajorVersion,
 			WGL_CONTEXT_MINOR_VERSION_ARB, settings.MinorVersion,
@@ -213,36 +215,49 @@ LRESULT CALLBACK WindowImplWin32::GlobalOnEvent(HWND handle, UINT message,
 {
 	if (message == WM_CREATE)
 	{
+		TRACE("WindowImplWin32::GlobalOnEvent : WM_CREATE");
 		// Get WindowImplWin32 instance (it was passed as the last argument of CreateWindow)
-		LONG_PTR
-				window =
-						(LONG_PTR) reinterpret_cast<CREATESTRUCT*> (lParam)->lpCreateParams;
+		LONG_PTR window = (LONG_PTR) reinterpret_cast<CREATESTRUCT*> (lParam)->lpCreateParams;
 
 		// Set as the "user data" parameter of the window
 		SetWindowLongPtr(handle, GWLP_USERDATA, window);
 	}
 
 	// Get the WindowImpl instance corresponding to the window handle
-	WindowImplWin32* window =
-			reinterpret_cast<WindowImplWin32*> (GetWindowLongPtr(handle,
-					GWLP_USERDATA));
+	WindowImplWin32* window = reinterpret_cast<WindowImplWin32*> (GetWindowLongPtr(handle,GWLP_USERDATA));
 
 	// Forward the event to the appropriate function
 	if (window)
 	{
+		TRACE("WindowImplWin32::GlobalOnEvent :  Procevent");
 		window->ProcessEvent(message, wParam, lParam);
+		//return CallWindowProc(reinterpret_cast<WNDPROC>(window->mCallback), handle, message, wParam, lParam);
 	}
 	else
 	{
-		std::cout << "Skipping ..." << std::endl;
+		//TRACE("WindowImplWin32::GlobalOnEvent : Skip message : " << window);
 	}
 
 	if (message == WM_CLOSE)
-	{
 		return 0;
-	}
+
 
 	return DefWindowProc(handle, message, wParam, lParam);
+}
+
+////////////////////////////////////////////////////////////
+void WindowImplWin32::ProcessEvents(bool block)
+{
+    // We process the window events only if we own it
+	if (block)
+		WaitMessage();
+
+	MSG message;
+	while (PeekMessage(&message, m_Handle, 0, 0, PM_REMOVE))
+	{
+		TranslateMessage(&message);
+		DispatchMessage(&message);
+	}
 }
 
 void WindowImplWin32::ProcessEvent(UINT message, WPARAM wParam, LPARAM lParam)
@@ -732,6 +747,7 @@ Key::Code WindowImplWin32::VirtualKeyCodeToSF(WPARAM key, LPARAM flags)
 
 void WindowImplWin32::Display()
 {
+	//TRACE("WindowImplWin32::Display");
 	SwapBuffers(m_DeviceContext);
 }
 

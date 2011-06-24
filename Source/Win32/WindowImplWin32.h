@@ -12,6 +12,9 @@ namespace priv
 class WindowImplWin32: public WindowImpl
 {
 private:
+	/*
+	 * Attributes
+	 */
 	HWND m_Handle; ///< Win32 handle of the window
 	HINSTANCE m_hInstance;
 	HDC m_DeviceContext;
@@ -19,12 +22,24 @@ private:
 	bool m_IsCursorIn;
 	bool m_KeyRepeatEnabled;
 public:
+	/*
+	 * Constructors and Destructors
+	 */
 	WindowImplWin32(const WindowMode& mode, const std::string& name,
 			const OpenGLContextSettings& settings);
 	virtual ~WindowImplWin32();
 
-	void Display();
+	/*
+	 * Virtual functions
+	 */
+	virtual void ProcessEvents(bool block);
+	virtual void Display();
+
 private:
+	/*
+	 * Private methods
+	 */
+	// Process Events
 	static LRESULT CALLBACK GlobalOnEvent(HWND handle, UINT message,
 			WPARAM wParam, LPARAM lParam);
 	void ProcessEvent(UINT message, WPARAM wParam, LPARAM lParam);
