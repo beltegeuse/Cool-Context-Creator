@@ -54,9 +54,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	std::cout << "Lancement ..." << std::endl;
 
 	// Object Creation
-	Window win;
-	WindowMode mode(800,600);
-	OpenGLContextSettings openGLSettings(2,1);
+	PCM::Window win;
+	PCM::WindowMode mode(800,600);
+	PCM::OpenGLContextSettings openGLSettings(2,1);
+
 	// Create the window
 	std::cout << "Creation ..." << std::endl;
 	win.Create(mode,"OpenGL2",openGLSettings);
@@ -73,18 +74,18 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	while(win.IsOpened())
 	{
 		// Events
-		Event event;
+		PCM::Event event;
 		while(win.PoolEvent(event))
 		{
 			std::cout << "Event !" << std::endl;
-			if(event.Type == Event::Closed)
+			if(event.Type == PCM::Event::Closed)
 			{
 				std::cout << "Close ... " << std::endl;
 				win.Close();
 			}
-			else if(event.Type == Event::KeyPressed)
+			else if(event.Type == PCM::Event::KeyPressed)
 			{
-				if(event.Key.Code == Key::Escape)
+				if(event.Key.Code == PCM::Key::Escape)
 				{
 					std::cout << "Close ... " << std::endl;
 					win.Close();

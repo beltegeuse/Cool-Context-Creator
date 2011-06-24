@@ -7,18 +7,24 @@
 
 #include <Window.h>
 #include <WindowImpl.h>
+
+namespace PCM
+{
+
 Window::Window() :
 	m_Window(NULL)
-{}
+{
+}
 
 Window::~Window()
 {
 	Close();
 }
 
-void Window::Create(const WindowMode& mode, const std::string& name, const OpenGLContextSettings& settings)
+void Window::Create(const WindowMode& mode, const std::string& name,
+		const OpenGLContextSettings& settings)
 {
-	m_Window = WindowImpl::Create(mode,name,settings);
+	m_Window = priv::WindowImpl::Create(mode, name, settings);
 }
 
 void Window::Display()
@@ -28,7 +34,9 @@ void Window::Display()
 
 bool Window::PoolEvent(Event& event)
 {
-	if(!m_Window)
+	if (!m_Window)
 		return false;
 	return m_Window->GetEvent(event);
 }
+
+} // Namespace PCM

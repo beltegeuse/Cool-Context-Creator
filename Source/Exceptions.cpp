@@ -4,6 +4,11 @@
 #include "Exceptions.h"
 #include <sstream>
 
+namespace PCM
+{
+namespace priv
+{
+
 /////////////////////////////////////////////////////////////
 /// Constructeur
 ///
@@ -11,21 +16,19 @@
 ///
 ////////////////////////////////////////////////////////////
 CException::CException(const std::string& Message) :
-m_Message(Message)
+	m_Message(Message)
 {
 
 }
-
 
 /////////////////////////////////////////////////////////////
 /// Destructeur
 ///
 ////////////////////////////////////////////////////////////
-CException::~CException() throw()
+CException::~CException() throw ()
 {
 
 }
-
 
 /////////////////////////////////////////////////////////////
 /// Renvoie le message associ� � l'exception
@@ -33,11 +36,10 @@ CException::~CException() throw()
 /// \return Pointeur sur le message
 ///
 ////////////////////////////////////////////////////////////
-const char* CException::what() const throw()
+const char* CException::what() const throw ()
 {
-    return m_Message.c_str();
+	return m_Message.c_str();
 }
-
 
 /////////////////////////////////////////////////////////////
 /// Constructeur
@@ -47,10 +49,14 @@ const char* CException::what() const throw()
 /// \param Message : Message d'erreur
 ///
 ////////////////////////////////////////////////////////////
-CAssertException::CAssertException(const std::string& File, int Line, const std::string& Message) :
-CException("")
+CAssertException::CAssertException(const std::string& File, int Line,
+		const std::string& Message) :
+	CException("")
 {
 	std::ostringstream oss;
 	oss << File << " (" << Line << ") : " << Message << std::endl;
 	m_Message = oss.str();
+}
+
+}
 }

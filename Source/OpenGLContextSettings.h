@@ -8,19 +8,24 @@
 #ifndef OPENGLCONTEXTSETTINGS_H_
 #define OPENGLCONTEXTSETTINGS_H_
 
+namespace PCM
+{
+
 struct OpenGLContextSettings
 {
-	OpenGLContextSettings(int majV = 3, int minV = 1, int depth = 24, int stentil = 8 ) :
-		MajorVersion(majV),
-		MinorVersion(minV),
-		DepthBits(depth),
-		StentilBits(stentil)
-	{}
+	OpenGLContextSettings(int majV = 3, int minV = 1, int depth = 24,
+			int stentil = 8) :
+		MajorVersion(majV), MinorVersion(minV), DepthBits(depth),
+				StentilBits(stentil)
+	{
+	}
 
 	int MajorVersion;
 	int MinorVersion;
 	int DepthBits;
 	int StentilBits;
 };
+
+}
 
 #endif /* OPENGLCONTEXTSETTINGS_H_ */

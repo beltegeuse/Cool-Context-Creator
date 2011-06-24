@@ -9,13 +9,16 @@
 #include <OpenGLContextSettings.h>
 #include <WindowImpl.h>
 
-class Window {
+namespace PCM
+{
+class Window
+{
 protected:
 	/*
 	 * Attributes
 	 */
 	// To know if the windows is destroy
-	WindowImpl* m_Window;
+	priv::WindowImpl* m_Window;
 public:
 	/*
 	 * Constructors and destructors
@@ -27,14 +30,17 @@ public:
 	 * Public methods
 	 */
 	// Create OpenGL window
-	void Create(const WindowMode& mode, const std::string& name, const OpenGLContextSettings& settings = OpenGLContextSettings());
+	void Create(const WindowMode& mode, const std::string& name,
+			const OpenGLContextSettings& settings = OpenGLContextSettings());
 	// To know if the window is close
 	bool IsOpened() const
-	{ return m_Window != NULL; }
+	{
+		return m_Window != NULL;
+	}
 
 	void Close()
 	{
-		if(m_Window)
+		if (m_Window)
 			delete m_Window;
 	}
 	// Events
@@ -45,5 +51,6 @@ public:
 	 */
 	void Display();
 };
+}
 
 #endif /* ABSTRACTWINDOW_H_ */
