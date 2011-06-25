@@ -35,6 +35,10 @@ WindowImplWin32::WindowImplWin32(const WindowMode& mode,
 
 	bool fullscreen = mode.Fullscreen; // Set The Global Fullscreen Flag
 
+
+	/*
+	 * Window definition
+	 */
 	m_hInstance = GetModuleHandle(NULL); // Grab An Instance For Our Window
 	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC; // Redraw On Size, And Own DC For Window.
 	wc.lpfnWndProc = &WindowImplWin32::GlobalOnEvent; // WndProc Handles Messages
@@ -47,6 +51,9 @@ WindowImplWin32::WindowImplWin32(const WindowMode& mode,
 	wc.lpszMenuName = NULL; // We Don't Want A Menu
 	wc.lpszClassName = ClsName; // Set The Class Name
 
+	/*
+	 * Register Class
+	 */
 	if (!RegisterClass(&wc)) // Attempt To Register The Window Class
 	{
 		throw new CException("Failed To Register The Window Class.");
@@ -83,6 +90,9 @@ WindowImplWin32::WindowImplWin32(const WindowMode& mode,
 		}
 	}
 
+	/*
+	 * Window creation
+	 */
 	if (fullscreen) // Are We Still In Fullscreen Mode?
 	{
 		dwExStyle = WS_EX_APPWINDOW; // Window Extended Style
@@ -110,7 +120,7 @@ WindowImplWin32::WindowImplWin32(const WindowMode& mode,
 			NULL, // No Parent Window
 			NULL, // No Menu
 			m_hInstance, // Instance
-			NULL))) // Dont Pass Anything To WM_CREATE
+			this))) // Dont Pass Anything To WM_CREATE
 	{
 		DestroyOpenGLWindow();
 		throw new CException("Window Creation Error.");
@@ -119,7 +129,6 @@ WindowImplWin32::WindowImplWin32(const WindowMode& mode,
 	/*
 	 * OpenGL context creation
 	 */
-
 	static PIXELFORMATDESCRIPTOR pfd = // pfd Tells Windows How We Want Things To Be
 			{ sizeof(PIXELFORMATDESCRIPTOR), // Size Of This Pixel Format Descriptor
 					1, // Version Number
@@ -201,6 +210,7 @@ WindowImplWin32::WindowImplWin32(const WindowMode& mode,
 	}
 
 	ShowWindow(m_Handle, SW_SHOW); // Show The Window
+	UpdateWindow(m_Handle);
 	SetForegroundWindow(m_Handle); // Slightly Higher Priority
 	SetFocus(m_Handle); // Sets Keyboard Focus To The Window
 }
@@ -229,13 +239,7 @@ LRESULT CALLBACK WindowImplWin32::GlobalOnEvent(HWND handle, UINT message,
 	// Forward the event to the appropriate function
 	if (window)
 	{
-		TRACE("WindowImplWin32::GlobalOnEvent :  Procevent");
 		window->ProcessEvent(message, wParam, lParam);
-		//return CallWindowProc(reinterpret_cast<WNDPROC>(window->mCallback), handle, message, wParam, lParam);
-	}
-	else
-	{
-		//TRACE("WindowImplWin32::GlobalOnEvent : Skip message : " << window);
 	}
 
 	if (message == WM_CLOSE)
@@ -255,6 +259,7 @@ void WindowImplWin32::ProcessEvents(bool block)
 	MSG message;
 	while (PeekMessage(&message, m_Handle, 0, 0, PM_REMOVE))
 	{
+		//TRACE("WindowImplWin32::ProcessEvents : Get Message");
 		TranslateMessage(&message);
 		DispatchMessage(&message);
 	}
@@ -779,7 +784,7 @@ void WindowImplWin32::DestroyOpenGLWindow()
 		m_Handle = NULL; // Set hWnd To NULL
 	}
 
-	if (!UnregisterClass("OpenGL", m_hInstance)) // Are We Able To Unregister Class
+	if (!UnregisterClass(ClsName, m_hInstance)) // Are We Able To Unregister Class
 	{
 		throw CException("Could Not Unregister Class.");
 		m_hInstance = NULL; // Set hInstance To NULL

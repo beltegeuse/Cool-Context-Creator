@@ -62,12 +62,20 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	std::cout << "Creation ..." << std::endl;
 	win.Create(mode,"OpenGL2",openGLSettings);
 
+
 	// Initialise OpenGL
+	glViewport(0, 0, 800, 600);
+
 	glMatrixMode( GL_PROJECTION );
 	glLoadIdentity();
-	gluPerspective(70,(double)640/480,1,1000);
+	gluPerspective(45.0f,(GLfloat)800/(GLfloat)600,0.1f,100.0f);
 
-	glEnable(GL_DEPTH_TEST);
+	glShadeModel(GL_SMOOTH);							// Enable Smooth Shading
+	glClearColor(0.0f, 0.0f, 0.0f, 0.5f);				// Black Background
+	glClearDepth(1.0f);									// Depth Buffer Setup
+	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
+	glDepthFunc(GL_LEQUAL);								// The Type Of Depth Testing To Do
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculations
 
 	// Draw loop
 	std::cout << "Affichage ..." << std::endl;
