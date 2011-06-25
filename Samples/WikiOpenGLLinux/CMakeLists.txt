@@ -1,0 +1,23 @@
+SET(WikiOpenGLLinux_SRC
+	main.cpp
+)
+
+
+INCLUDE_DIRECTORIES(
+	${CMAKE_CURRENT_SOURCE_DIR}
+	../../Source
+)
+
+ADD_EXECUTABLE(WikiOpenGLLinux ${WikiOpenGLLinux_SRC})
+
+target_link_libraries(
+  WikiOpenGLLinux
+  ${OPENGL_LIBRARY}
+)
+
+SET_TARGET_PROPERTIES(WikiOpenGLLinux PROPERTIES
+  INSTALL_RPATH ${PROJECT_BUILD_PATH}
+  INSTALL_RPATH_USE_LINK_PATH true
+)
+
+install(TARGETS WikiOpenGLLinux RUNTIME DESTINATION ${PROJECT_BUILD_PATH})
