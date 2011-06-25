@@ -78,11 +78,59 @@ int initGL(GLvoid)
     return True;
 }
 
+
+void DisplayCube()
+{
+	glBegin(GL_QUADS);
+
+	glColor3ub(255,0,0); //face rouge
+	glVertex3d(1,1,1);
+	glVertex3d(1,1,-1);
+	glVertex3d(-1,1,-1);
+	glVertex3d(-1,1,1);
+
+	glColor3ub(0,255,0); //face verte
+	glVertex3d(1,-1,1);
+	glVertex3d(1,-1,-1);
+	glVertex3d(1,1,-1);
+	glVertex3d(1,1,1);
+
+	glColor3ub(0,0,255); //face bleue
+	glVertex3d(-1,-1,1);
+	glVertex3d(-1,-1,-1);
+	glVertex3d(1,-1,-1);
+	glVertex3d(1,-1,1);
+
+	glColor3ub(255,255,0); //face jaune
+	glVertex3d(-1,1,1);
+	glVertex3d(-1,1,-1);
+	glVertex3d(-1,-1,-1);
+	glVertex3d(-1,-1,1);
+
+	glColor3ub(0,255,255); //face cyan
+	glVertex3d(1,1,-1);
+	glVertex3d(1,-1,-1);
+	glVertex3d(-1,-1,-1);
+	glVertex3d(-1,1,-1);
+
+	glColor3ub(255,0,255); //face magenta
+	glVertex3d(1,-1,1);
+	glVertex3d(1,1,1);
+	glVertex3d(-1,1,1);
+	glVertex3d(-1,-1,1);
+
+	glEnd();
+}
+
 /* Here goes our drawing code */
 int drawGLScene(GLvoid)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
+
+    gluLookAt(3,4,2,0,0,0,0,0,1);
+    DisplayCube();
+
     if (GLWin.doubleBuffered)
     {
         glXSwapBuffers(GLWin.dpy, GLWin.win);
@@ -232,7 +280,7 @@ int main(int argc, char **argv)
     
     done = False;
     /* default to fullscreen */
-    GLWin.fs = True;
+    GLWin.fs = False;
     createGLWindow("NeHe's OpenGL Framework", 640, 480, 24, GLWin.fs);
 
     /* wait for events*/ 

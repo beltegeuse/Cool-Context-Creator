@@ -1,16 +1,39 @@
 
+#
+# Compilation Flags
+#
 IF(CMAKE_BUILD_TYPE MATCHES debug)
 	ADD_DEFINITIONS("-Wall -W -D_DEBUG") #Pour afficher les warning lors de la compilation
     #SET(CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_DEBUG} " -D_DEBUG -ansi -Wall -Wextra -Wfatal-errors -pedantic -Wmain -Wswitch-default -Wunreachable-code -Winit-self -Wshadow -Wwrite-strings -Wuninitialized") #Pour afficher les warning lors de la compilation
 ENDIF(CMAKE_BUILD_TYPE MATCHES debug)
 
+#
+# Multi-platform sources
+#
 SET(LIB_PCM_SRCS
 	Exceptions.cpp
 	Window.cpp
 	WindowImpl.cpp
-	Win32/WindowImplWin32.cpp
 )
 
+#
+# Specific platform sources
+#
+IF(WIN32)
+SET(LIB_PCM_SRCS
+	${LIB_PCM_SRCS}
+	Win32/WindowImplWin32.cpp
+)
+ELSE()
+SET(LIB_PCM_SRCS
+	${LIB_PCM_SRCS}
+	Linux/WindowImplLinux.cpp
+)
+ENDIF()
+
+#
+# Lib configuration
+#
 INCLUDE_DIRECTORIES(
 	${CMAKE_CURRENT_SOURCE_DIR}
 )

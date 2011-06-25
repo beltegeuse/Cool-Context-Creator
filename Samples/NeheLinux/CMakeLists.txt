@@ -1,0 +1,23 @@
+SET(NeheLinux_SRC
+	lesson01.c
+)
+
+
+INCLUDE_DIRECTORIES(
+	${CMAKE_CURRENT_SOURCE_DIR}
+	../../Source
+)
+
+ADD_EXECUTABLE(NeheLinux ${NeheLinux_SRC})
+
+target_link_libraries(
+  NeheLinux
+  ${OPENGL_LIBRARY}
+)
+
+SET_TARGET_PROPERTIES(NeheLinux PROPERTIES
+  INSTALL_RPATH ${PROJECT_BUILD_PATH}
+  INSTALL_RPATH_USE_LINK_PATH true
+)
+
+install(TARGETS NeheLinux RUNTIME DESTINATION ${PROJECT_BUILD_PATH})

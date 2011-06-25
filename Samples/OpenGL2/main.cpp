@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include <Window.h>
-#include <windows.h>
+
 
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -49,7 +49,13 @@ void DisplayCube()
 	glEnd();
 }
 
+
+#if WIN32
+#include <windows.h>
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+#else
+int main()
+#endif
 {
 	std::cout << "Lancement ..." << std::endl;
 
