@@ -29,6 +29,10 @@ namespace priv {
 typedef GLXContext (*glXCreateContextAttribsARBProc)(::Display*, GLXFBConfig,
 		GLXContext, Bool, const int*);
 
+unsigned long eventMask = FocusChangeMask | ButtonPressMask | ButtonReleaseMask | ButtonMotionMask |
+                                                PointerMotionMask | KeyPressMask | KeyReleaseMask | StructureNotifyMask |
+                                                EnterWindowMask | LeaveWindowMask;
+
 #include <string.h>
 // Helper to check for extension string presence.  Adapted from:
 //   http://www.opengl.org/resources/features/OGLextensions/
@@ -73,12 +77,14 @@ static int m_ContextErrorHandler(::Display *dpy, XErrorEvent *ev) {
 Bool CheckEvent(::Display*, XEvent* event, XPointer userData)
 {
 	// Just check if the event matches the window
-	return event->xany.window == reinterpret_cast< ::Window >(userData);
+	//return event->xany.window == reinterpret_cast< ::Window >(userData);
+	return true; // FIXME
 }
 
 WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 		const std::string& name, const OpenGLContextSettings& settings) :
-	m_Display(NULL),
+	m_Display(NULL),m_InputMethod (NULL),
+	m_InputContext(NULL),m_AtomClose (0),
 	m_KeyRepeat(false)
 {
 	m_Display = XOpenDisplay(NULL);
@@ -105,13 +111,18 @@ WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 	  None
 	};
 
+	/*
+	 * GLX version checking
+	 */
 	int glx_major, glx_minor;
-
-	// FBConfigs were added in GLX version 1.3.
 	if ( !glXQueryVersion( m_Display, &glx_major, &glx_minor ) ||
 	   ( ( glx_major == 1 ) && ( glx_minor < 3 ) ) || ( glx_major < 1 ) )
 			throw new CException( "Invalid GLX version" );
 
+	/*
+	 * Find best configuration
+	 * TODO: Voir comment la SFML fait pour ca ...
+	 */
 	TRACE( "Getting matching framebuffer configs" );
 	int fbcount;
 	GLXFBConfig *fbc = glXChooseFBConfig( m_Display, DefaultScreen( m_Display ),
@@ -154,6 +165,9 @@ WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 	XVisualInfo *vi = glXGetVisualFromFBConfig( m_Display, bestFbc );
 	TRACE( "Chosen visual ID = " << vi->visualid );
 
+	/*
+	 * Create window
+	 */
 	TRACE( "Creating colormap" );
 	XSetWindowAttributes swa;
 	Colormap cmap;
@@ -162,7 +176,8 @@ WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 										 vi->visual, AllocNone );
 	swa.background_pixmap = None ;
 	swa.border_pixel      = 0;
-	swa.event_mask        = StructureNotifyMask;
+	swa.event_mask        = eventMask; //StructureNotifyMask
+	//swa = fullscreen; //TODO: For fullscreen
 
 	TRACE( "Creating window" );
 	m_Window = XCreateWindow( m_Display, RootWindow( m_Display, vi->screen ),
@@ -175,11 +190,82 @@ WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 	// Done with the visual info data
 	XFree( vi );
 
+	// Put the window name
 	XStoreName( m_Display, m_Window, name.c_str() );
 
 	/*
 	 * Input section
 	 */
+	if (!mode.Fullscreen) // If not fullscreen
+	{
+		Atom WMHintsAtom = XInternAtom(m_Display, "_MOTIF_WM_HINTS", false);
+		if (WMHintsAtom)
+		{
+			static const unsigned long MWM_HINTS_FUNCTIONS = 1 << 0;
+			static const unsigned long MWM_HINTS_DECORATIONS = 1 << 1;
+
+			//static const unsigned long MWM_DECOR_ALL = 1 << 0;
+			static const unsigned long MWM_DECOR_BORDER = 1 << 1;
+			static const unsigned long MWM_DECOR_RESIZEH = 1 << 2;
+			static const unsigned long MWM_DECOR_TITLE = 1 << 3;
+			static const unsigned long MWM_DECOR_MENU = 1 << 4;
+			static const unsigned long MWM_DECOR_MINIMIZE = 1 << 5;
+			static const unsigned long MWM_DECOR_MAXIMIZE = 1 << 6;
+
+			//static const unsigned long MWM_FUNC_ALL = 1 << 0;
+			static const unsigned long MWM_FUNC_RESIZE = 1 << 1;
+			static const unsigned long MWM_FUNC_MOVE = 1 << 2;
+			static const unsigned long MWM_FUNC_MINIMIZE = 1 << 3;
+			static const unsigned long MWM_FUNC_MAXIMIZE = 1 << 4;
+			static const unsigned long MWM_FUNC_CLOSE = 1 << 5;
+
+			struct WMHints
+			{
+				unsigned long Flags;
+				unsigned long Functions;
+				unsigned long Decorations;
+				long InputMode;
+				unsigned long State;
+			};
+
+			WMHints hints;
+			hints.Flags = MWM_HINTS_FUNCTIONS | MWM_HINTS_DECORATIONS;
+			hints.Decorations = 0;
+			hints.Functions = 0;
+
+			//TODO: Les tests de la SFML pour activer que certains evenements
+//			if (style & Style::Titlebar)
+//			{
+				hints.Decorations |= MWM_DECOR_BORDER | MWM_DECOR_TITLE | MWM_DECOR_MINIMIZE | MWM_DECOR_MENU;
+				hints.Functions |= MWM_FUNC_MOVE | MWM_FUNC_MINIMIZE;
+//			}
+//			if (style & Style::Resize)
+//			{
+				hints.Decorations |= MWM_DECOR_MAXIMIZE | MWM_DECOR_RESIZEH;
+				hints.Functions |= MWM_FUNC_MAXIMIZE | MWM_FUNC_RESIZE;
+//			}
+//			if (style & Style::Close)
+//			{
+				hints.Decorations |= 0;
+				hints.Functions |= MWM_FUNC_CLOSE;
+//			}
+
+			const unsigned char* ptr = reinterpret_cast<const unsigned char*>(&hints);
+			XChangeProperty(m_Display, m_Window, WMHintsAtom, WMHintsAtom, 32, PropModeReplace, ptr, 5);
+		}
+
+		//TODO: A voir si intergration
+		// This is a hack to force some windows managers to disable resizing
+//		if (!(style & Style::Resize))
+//		{
+//			XSizeHints sizeHints;
+//			sizeHints.flags = PMinSize | PMaxSize;
+//			sizeHints.min_width = sizeHints.max_width = width;
+//			sizeHints.min_height = sizeHints.max_height = height;
+//			XSetWMNormalHints(myDisplay, myWindow, &sizeHints);
+//		}
+	}
+
 	// Make sure the "last key release" is initialized with invalid values
 	m_LastKeyReleaseEvent.type = -1;
 
