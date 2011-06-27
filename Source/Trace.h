@@ -27,8 +27,10 @@
 
 namespace PCM
 {
+
 #ifdef _DEBUG
 #define TRACE(x) std::cout << "[TRACE] " << x << std::endl
+
 #else
 #define TRACE(x)
 #endif

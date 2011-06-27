@@ -54,7 +54,7 @@ void DisplayCube()
 #include <windows.h>
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 #else
-int main()
+int main(int argc, char ** argv)
 #endif
 {
 	std::cout << "Lancement ..." << std::endl;

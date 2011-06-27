@@ -3,7 +3,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <X11/Xlib.h>
-#include <X11/Xutil.h>
 #include <GL/gl.h>
 #include <GL/glx.h>
 
@@ -55,7 +54,7 @@ static int ctxErrorHandler( Display *dpy, XErrorEvent *ev )
 
 int main (int argc, char ** argv)
 {
-  Display *display = XOpenDisplay(0);
+  Display *display = XOpenDisplay(NULL);
 
   if ( !display )
   {
