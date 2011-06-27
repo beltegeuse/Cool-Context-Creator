@@ -167,7 +167,7 @@ WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 	// Done with the visual info data
 	XFree( vi );
 
-	XStoreName( m_Display, m_Window, "GL 3.0 Window" );
+	XStoreName( m_Display, m_Window, name.c_str() );
 
 	TRACE( "Mapping window" );
 	XMapWindow( m_Display, m_Window );
@@ -209,8 +209,8 @@ WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 	{
 	int context_attribs[] =
 	  {
-		GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
-		GLX_CONTEXT_MINOR_VERSION_ARB, 0,
+		GLX_CONTEXT_MAJOR_VERSION_ARB, settings.MajorVersion,
+		GLX_CONTEXT_MINOR_VERSION_ARB, settings.MinorVersion,
 		//GLX_CONTEXT_FLAGS_ARB        , GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
 		None
 	  };
@@ -222,7 +222,7 @@ WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 	// Sync to ensure any errors generated are processed.
 	XSync( m_Display, False );
 	if ( !m_ContextErrorOccurred && m_Context )
-	  TRACE( "Created GL 3.0 context" );
+	  TRACE( "Created GL " << settings.MajorVersion << "." << settings.MinorVersion << " context" );
 	else
 	{
 	  // Couldn't create GL 3.0 context.  Fall back to old-style 2.x context.
@@ -236,7 +236,7 @@ WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 
 	  m_ContextErrorOccurred = false;
 
-	  TRACE( "Failed to create GL 3.0 context"
+	  TRACE( "Failed to create GL " << settings.MajorVersion << "." << settings.MinorVersion << " context"
 			  " ... using old-style GLX context" );
 	  m_Context = glXCreateContextAttribsARB( m_Display, bestFbc, 0,
 										True, context_attribs );
