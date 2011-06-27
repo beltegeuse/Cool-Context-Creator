@@ -77,8 +77,7 @@ static int m_ContextErrorHandler(::Display *dpy, XErrorEvent *ev) {
 Bool CheckEvent(::Display*, XEvent* event, XPointer userData)
 {
 	// Just check if the event matches the window
-	//return event->xany.window == reinterpret_cast< ::Window >(userData);
-	return true; // FIXME
+	return event->xany.window == reinterpret_cast< ::Window >(userData);
 }
 
 WindowImplLinux::WindowImplLinux(const WindowMode& mode,

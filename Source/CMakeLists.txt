@@ -14,6 +14,7 @@ SET(LIB_PCM_SRCS
 	PCM/Exceptions.cpp
 	PCM/Window.cpp
 	PCM/WindowImpl.cpp
+	PCM/Clock.cpp
 )
 
 #
@@ -40,6 +41,8 @@ INSTALL(FILES
 	PCM/Window.h
 	PCM/WindowImpl.h
 	PCM/WindowMode.h
+	PCM/Clock.h
+	PCM/Config.h
 DESTINATION ${PROJECT_BUILD_PATH}/include/PCM)
 
 #
