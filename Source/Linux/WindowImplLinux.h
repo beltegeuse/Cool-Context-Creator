@@ -30,6 +30,11 @@ private:
 	::Window m_Window;
 	::Colormap m_Colormap;
 	GLXContext m_Context;
+	XEvent     m_LastKeyReleaseEvent; ///< Last key release event we received (needed for discarding repeated key events)
+	Atom       m_AtomClose;           ///< Atom used to identify the close event
+	XIC        m_InputContext;        ///< Input context used to get unicode input in our window
+	XIM        m_InputMethod;         ///< Input method linked to the X display
+	bool m_KeyRepeat;
 public:
 	/*
 	 * Constructors and destructors
@@ -43,6 +48,13 @@ public:
 	 */
 	virtual void Display();
 	virtual void ProcessEvents(bool block);
+
+private:
+	/*
+	 * Private methods
+	 */
+	bool ProcessEvent(XEvent windowEvent);
+	static Key::Code KeysymToSF(KeySym symbol);
 };
 
 // Namespaces ends
