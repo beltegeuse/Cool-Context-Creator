@@ -194,7 +194,7 @@ WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 	XStoreName( m_Display, m_Window, name.c_str() );
 
 	/*
-	 * Input section
+	 * Change window style
 	 */
 	if (!mode.Fullscreen) // If not fullscreen
 	{
@@ -265,6 +265,10 @@ WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 //			XSetWMNormalHints(myDisplay, myWindow, &sizeHints);
 //		}
 	}
+
+	/*
+	 * Input section
+	 */
 
 	// Make sure the "last key release" is initialized with invalid values
 	m_LastKeyReleaseEvent.type = -1;
@@ -390,6 +394,7 @@ WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 }
 
 WindowImplLinux::~WindowImplLinux() {
+	// TODO: Faire la gestion d'erreur (Voir SFML)
 	glXMakeCurrent(m_Display, 0, 0);
 	glXDestroyContext(m_Display, m_Context);
 

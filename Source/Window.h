@@ -33,16 +33,9 @@ public:
 	void Create(const WindowMode& mode, const std::string& name,
 			const OpenGLContextSettings& settings = OpenGLContextSettings());
 	// To know if the window is close
-	bool IsOpened() const
-	{
-		return m_Window != NULL;
-	}
+	bool IsOpened() const;
+	void Close();
 
-	void Close()
-	{
-		if (m_Window)
-			delete m_Window;
-	}
 	// Events
 	bool PoolEvent(Event& event);
 

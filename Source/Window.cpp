@@ -39,4 +39,15 @@ bool Window::PoolEvent(Event& event)
 	return m_Window->GetEvent(event);
 }
 
+bool Window::IsOpened() const
+{
+	return m_Window != NULL;
+}
+
+void Window::Close()
+{
+	if (m_Window)
+		delete m_Window;
+}
+
 } // Namespace PCM

@@ -28,9 +28,7 @@ private:
 
 public:
 	// Destructors
-	virtual ~WindowImpl()
-	{
-	}
+	virtual ~WindowImpl();
 
 	/*
 	 * Public static methods
@@ -47,35 +45,16 @@ public:
 	 * Public methods
 	 */
 	// Get information for the size of the rendering
-	int GetWidth()
-	{
-		return m_Width;
-	}
-	int GetHeight()
-	{
-		return m_Height;
-	}
-	// events methods
-	bool GetEvent(Event& event)
-	{
-		if (m_Events.empty())
-		{
-			ProcessEvents(false);
-			return false;
-		}
-		event = m_Events.front();
-		m_Events.pop();
-		return true;
-	}
-	void PushEvent(Event& event)
-	{
-		m_Events.push(event);
-	}
+	int GetWidth() const;
+	int GetHeight() const;
+
+	// *** events methods ***
+	bool GetEvent(Event& event);
 
 protected:
-	WindowImpl()
-	{
-	}
+	WindowImpl();
+
+	void PushEvent(Event& event);
 
 	/*
 	 * Attributes
