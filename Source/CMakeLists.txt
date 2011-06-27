@@ -32,6 +32,17 @@ SET(LIB_PCM_SRCS
 ENDIF()
 
 #
+# Headers Installation
+#
+INSTALL(FILES
+	PCM/Events.h
+	PCM/OpenGLContextSettings.h
+	PCM/Window.h
+	PCM/WindowImpl.h
+	PCM/WindowMode.h
+DESTINATION ${PROJECT_BUILD_PATH}/include/PCM)
+
+#
 # Lib configuration
 #
 INCLUDE_DIRECTORIES(
