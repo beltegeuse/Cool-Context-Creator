@@ -62,7 +62,7 @@ int main(int argc, char ** argv)
 	// Object Creation
 	PCM::Window win;
 	PCM::WindowMode mode(800,600);
-	PCM::OpenGLContextSettings openGLSettings(2,1);
+	PCM::OpenGLContextSettings openGLSettings(3,1);
 
 	// Create the window
 	std::cout << "Creation ..." << std::endl;
