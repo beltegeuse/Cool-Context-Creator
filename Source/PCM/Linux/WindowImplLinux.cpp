@@ -6,9 +6,9 @@
  */
 
 // PCM Includes
-#include "WindowImplLinux.h"
-#include "Exceptions.h"
-#include "Trace.h"
+#include <PCM/Linux/WindowImplLinux.h>
+#include <PCM/Exceptions.h>
+#include <PCM/Trace.h>
 
 // OpenGL Includes
 #include <GL/gl.h>

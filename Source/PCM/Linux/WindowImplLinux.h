@@ -9,7 +9,7 @@
 #define WINDOWIMPLLINUX_H_
 
 // PCM Includes
-#include <WindowImpl.h>
+#include <PCM/WindowImpl.h>
 
 // X Includes
 #include <X11/Xlib.h>

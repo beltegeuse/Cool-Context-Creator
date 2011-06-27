@@ -11,9 +11,9 @@ ENDIF(CMAKE_BUILD_TYPE MATCHES debug)
 # Multi-platform sources
 #
 SET(LIB_PCM_SRCS
-	Exceptions.cpp
-	Window.cpp
-	WindowImpl.cpp
+	PCM/Exceptions.cpp
+	PCM/Window.cpp
+	PCM/WindowImpl.cpp
 )
 
 #
@@ -22,12 +22,12 @@ SET(LIB_PCM_SRCS
 IF(WIN32)
 SET(LIB_PCM_SRCS
 	${LIB_PCM_SRCS}
-	Win32/WindowImplWin32.cpp
+	PCM/Win32/WindowImplWin32.cpp
 )
 ELSE()
 SET(LIB_PCM_SRCS
 	${LIB_PCM_SRCS}
-	Linux/WindowImplLinux.cpp
+	PCM/Linux/WindowImplLinux.cpp
 )
 ENDIF()
 

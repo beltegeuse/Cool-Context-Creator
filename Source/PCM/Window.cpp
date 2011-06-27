@@ -5,8 +5,8 @@
  *      Author: Beltegeuse
  */
 
-#include <Window.h>
-#include <WindowImpl.h>
+#include <PCM/Window.h>
+#include <PCM/WindowImpl.h>
 
 namespace PCM
 {

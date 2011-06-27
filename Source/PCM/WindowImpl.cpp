@@ -1,10 +1,10 @@
 #include "WindowImpl.h"
 
 #ifdef WIN32
-#include <Win32/WindowImplWin32.h>
+#include <PCM/Win32/WindowImplWin32.h>
 typedef PCM::priv::WindowImplWin32 WindowImplType;
 #else
-#include <Linux/WindowImplLinux.h>
+#include <PCM/Linux/WindowImplLinux.h>
 typedef PCM::priv::WindowImplLinux WindowImplType;
 #endif
 

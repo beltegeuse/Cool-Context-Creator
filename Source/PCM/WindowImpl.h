@@ -13,9 +13,9 @@
 #include <queue>
 
 // PCM includes
-#include <WindowMode.h>
-#include <OpenGLContextSettings.h>
-#include <Events.h>
+#include <PCM/WindowMode.h>
+#include <PCM/OpenGLContextSettings.h>
+#include <PCM/Events.h>
 
 namespace PCM
 {
