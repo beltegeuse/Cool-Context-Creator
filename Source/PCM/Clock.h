@@ -32,6 +32,9 @@ public:
 	Uint32 GetElapsedTime() const;
 
 private:
+	/*
+	 * Private methods
+	 */
 	Uint64 GetSystemClock() const;
 };
 }
