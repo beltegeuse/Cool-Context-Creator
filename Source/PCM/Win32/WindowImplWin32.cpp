@@ -1,4 +1,4 @@
-#include "WindowImplWin32.h"
+#include <PCM/Win32/WindowImplWin32.h>
 #include <Exceptions.h>
 #include <GL/glew.h>
 #include <GL/wglew.h>

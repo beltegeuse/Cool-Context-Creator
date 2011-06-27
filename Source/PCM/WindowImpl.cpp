@@ -1,4 +1,4 @@
-#include "WindowImpl.h"
+#include <PCM/WindowImpl.h>
 
 #ifdef WIN32
 #include <PCM/Win32/WindowImplWin32.h>
