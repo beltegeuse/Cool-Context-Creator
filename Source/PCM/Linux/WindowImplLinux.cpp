@@ -191,7 +191,7 @@ WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 	XFree( vi );
 
 	// Put the window name
-	XStoreName( m_Display, m_Window, name.c_str() );
+	SetTitle(name);
 
 	/*
 	 * Change window style
@@ -298,7 +298,7 @@ WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 
 	// Display the window
 	TRACE( "Mapping window" );
-	XMapWindow( m_Display, m_Window );
+	Show(true);
 
 	/*
 	 * OpenGL section
@@ -405,6 +405,21 @@ WindowImplLinux::~WindowImplLinux() {
 
 void WindowImplLinux::Display() {
 	glXSwapBuffers(m_Display, m_Window);
+}
+
+void WindowImplLinux::SetTitle(const std::string& title)
+{
+	XStoreName( m_Display, m_Window, title.c_str() );
+}
+
+void WindowImplLinux::Show(bool show)
+{
+	if (show)
+		XMapWindow(m_Display, m_Window);
+	else
+		XUnmapWindow(m_Display, m_Window);
+
+	XFlush(m_Display);
 }
 
 void WindowImplLinux::ProcessEvents(bool block)

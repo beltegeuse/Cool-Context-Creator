@@ -50,4 +50,31 @@ void Window::Close()
 		delete m_Window;
 }
 
+int Window::GetWidth() const
+{
+	if (m_Window)
+		m_Window->GetWidth();
+	return 0;
+}
+
+int Window::GetHeight() const
+{
+	if(m_Window)
+		m_Window->GetHeight();
+	return 0;
+}
+
+void Window::SetTitle(const std::string& title)
+{
+	if(m_Window)
+		m_Window->SetTitle(title);
+}
+
+void Window::Show(bool show)
+{
+	if(m_Window)
+		m_Window->Show(show);
+}
+
+
 } // Namespace PCM

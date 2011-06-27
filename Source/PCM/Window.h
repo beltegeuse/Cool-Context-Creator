@@ -30,6 +30,15 @@ public:
 	/*
 	 * Public methods
 	 */
+	//TODO: Add Time methods
+	// Getters
+	int GetWidth() const;
+	int GetHeight() const;
+
+	// Setters
+	void SetTitle(const std::string& title);
+	void Show(bool show);
+
 	// Create OpenGL window
 	void Create(const WindowMode& mode, const std::string& name,
 			const OpenGLContextSettings& settings = OpenGLContextSettings());

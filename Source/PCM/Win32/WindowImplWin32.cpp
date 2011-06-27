@@ -184,6 +184,7 @@ WindowImplWin32::WindowImplWin32(const WindowMode& mode,
 				"Can't Activate The temporary GL Rendering Context.");
 	}
 
+	//FIXME: Retrait de la dependance GLEW
 	GLenum err = glewInit();
 	if (GLEW_OK != err)
 	{
