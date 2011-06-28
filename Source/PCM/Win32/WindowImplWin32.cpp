@@ -235,7 +235,7 @@ void WindowImplWin32::Show(bool show)
 
 void WindowImplWin32::SetTitle(const std::string& title)
 {
-	// FIXME
+	 SetWindowText(m_Handle, title.c_str());
 }
 
 LRESULT CALLBACK WindowImplWin32::GlobalOnEvent(HWND handle, UINT message,
