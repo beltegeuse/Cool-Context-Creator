@@ -21,9 +21,6 @@ const char* ClsName = "OpenGLPWM";
 #define MAPVK_VK_TO_VSC (0)
 #endif
 
-#define WGL_CONTEXT_MAJOR_VERSION_ARB		0x2091
-#define WGL_CONTEXT_MINOR_VERSION_ARB		0x2092
-
 WindowImplWin32::WindowImplWin32(const WindowMode& mode,
 		const std::string& name, const OpenGLContextSettings& settings) :
 	m_Handle(NULL), m_hInstance(NULL), m_DeviceContext(NULL),
