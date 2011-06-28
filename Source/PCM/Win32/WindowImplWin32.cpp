@@ -4,8 +4,8 @@
 #include <PCM/Trace.h>
 
 // OpenGL includes
-#include <GL/glew.h>
-#include <GL/wglew.h>
+#include <GL/gl.h>
+#include <PCM/glext/wglext.h>
 
 // Other includes
 #include <iostream>
@@ -20,6 +20,9 @@ const char* ClsName = "OpenGLPWM";
 #ifndef MAPVK_VK_TO_VSC
 #define MAPVK_VK_TO_VSC (0)
 #endif
+
+#define WGL_CONTEXT_MAJOR_VERSION_ARB		0x2091
+#define WGL_CONTEXT_MINOR_VERSION_ARB		0x2092
 
 WindowImplWin32::WindowImplWin32(const WindowMode& mode,
 		const std::string& name, const OpenGLContextSettings& settings) :
@@ -188,23 +191,20 @@ WindowImplWin32::WindowImplWin32(const WindowMode& mode,
 				"Can't Activate The temporary GL Rendering Context.");
 	}
 
-	//FIXME: Retrait de la dependance GLEW
-	GLenum err = glewInit();
-	if (GLEW_OK != err)
-	{
-		throw new CException("Impossible to initialize GLEW.");
-	}
-
 	TRACE("WindowImplWin32::WindowImplWin32 : OpenGL context Creation : " << settings.MajorVersion << "." << settings.MinorVersion);
+
+	// Spec : http://www.opengl.org/registry/specs/ARB/wgl_create_context.txt
 	int attribs[] =
 	{ WGL_CONTEXT_MAJOR_VERSION_ARB, settings.MajorVersion,
-			WGL_CONTEXT_MINOR_VERSION_ARB, settings.MinorVersion,
-			WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB, 0 };
+	  WGL_CONTEXT_MINOR_VERSION_ARB, settings.MinorVersion,
+	  //WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
+	  0
+    };
 
-	if (wglewIsSupported("WGL_ARB_create_context") == 1)
+	PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = reinterpret_cast<PFNWGLCREATECONTEXTATTRIBSARBPROC>(wglGetProcAddress("wglCreateContextAttribsARB"));
+	if (wglCreateContextAttribsARB != 0)
 	{
-		m_OpenGLContext = wglCreateContextAttribsARB(m_DeviceContext, 0,
-				attribs);
+		m_OpenGLContext = wglCreateContextAttribsARB(m_DeviceContext, 0, attribs);
 		wglMakeCurrent(NULL, NULL);
 		wglDeleteContext(tempContext);
 		wglMakeCurrent(m_DeviceContext, m_OpenGLContext);
@@ -507,7 +507,7 @@ void WindowImplWin32::ProcessEvent(UINT message, WPARAM wParam, LPARAM lParam)
 		PushEvent(event);
 		break;
 	}
-
+		// TODO: Voir si on ajoute cette fonction ...
 		//		// Mouse X button down event
 		//		case WM_XBUTTONDOWN :
 		//		{
