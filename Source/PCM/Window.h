@@ -9,6 +9,7 @@
 #include <PCM/WindowMode.h>
 #include <PCM/OpenGLContextSettings.h>
 #include <PCM/WindowImpl.h>
+#include <PCM/Clock.h>
 
 namespace PCM
 {
@@ -20,6 +21,10 @@ protected:
 	 */
 	// To know if the windows is destroy
 	priv::WindowImpl* m_Window;
+	Uint32 m_LastFrameTime;
+	Clock m_Clock;
+	Uint32 m_FramerateLimit;
+
 public:
 	/*
 	 * Constructors and destructors
@@ -34,10 +39,12 @@ public:
 	// Getters
 	int GetWidth() const;
 	int GetHeight() const;
+	Uint32 GetFrameTime() const;
 
 	// Setters
 	void SetTitle(const std::string& title);
 	void Show(bool show);
+	void SetFrameLimit(Uint32 fps);
 
 	// Create OpenGL window
 	void Create(const WindowMode& mode, const std::string& name,

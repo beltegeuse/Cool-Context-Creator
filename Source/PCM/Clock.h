@@ -12,6 +12,8 @@
 
 namespace PCM
 {
+void Sleep(Uint32 time);
+
 class Clock {
 private:
 	/*

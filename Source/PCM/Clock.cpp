@@ -10,10 +10,20 @@
 #ifdef WIN32
 #include <windows.h>
 #else
+#include <unistd.h>
 #include <sys/time.h>
 #endif
 
 namespace PCM {
+void Sleep(Uint32 time)
+{
+#ifdef WIN32
+	::Sleep(time);
+#else
+	usleep(time * 1000);
+#endif
+}
+
 Clock::Clock()
 {
 	Reset();

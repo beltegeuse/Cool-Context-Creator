@@ -12,7 +12,9 @@ namespace PCM
 {
 
 Window::Window() :
-	m_Window(NULL)
+	m_Window(NULL),
+	m_LastFrameTime(0),
+	m_FramerateLimit(0)
 {
 }
 
@@ -24,12 +26,26 @@ Window::~Window()
 void Window::Create(const WindowMode& mode, const std::string& name,
 		const OpenGLContextSettings& settings)
 {
+	m_LastFrameTime = 0;
 	m_Window = priv::WindowImpl::Create(mode, name, settings);
 }
 
 void Window::Display()
 {
-	m_Window->Display();
+	// Frame limits
+	if(m_FramerateLimit > 0)
+	{
+		Uint32 waitTime = 1000 / m_FramerateLimit - m_Clock.GetElapsedTime();
+		if(waitTime > 0)
+			Sleep(waitTime);
+	}
+
+	// Update Time between two frames
+	m_LastFrameTime = m_Clock.GetElapsedTime();
+	m_Clock.Reset();
+
+	if(m_Window)
+		m_Window->Display();
 }
 
 bool Window::PoolEvent(Event& event)
@@ -62,6 +78,11 @@ int Window::GetHeight() const
 	if(m_Window)
 		m_Window->GetHeight();
 	return 0;
+}
+
+Uint32 Window::GetFrameTime() const
+{
+	return m_LastFrameTime;
 }
 
 void Window::SetTitle(const std::string& title)
