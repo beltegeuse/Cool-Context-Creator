@@ -214,7 +214,7 @@ WindowImplWin32::WindowImplWin32(const WindowMode& mode,
 		throw CException("Impossible to settings in the current context.");
 	}
 
-	ShowWindow(m_Handle, SW_SHOW); // Show The Window
+	Show(true);
 	UpdateWindow(m_Handle);
 	SetForegroundWindow(m_Handle); // Slightly Higher Priority
 	SetFocus(m_Handle); // Sets Keyboard Focus To The Window
@@ -227,7 +227,10 @@ WindowImplWin32::~WindowImplWin32()
 
 void WindowImplWin32::Show(bool show)
 {
-	// FIXME
+	if(show)
+		ShowWindow(m_Handle, SW_SHOW);
+	else
+		ShowWindow(m_Handle, SW_HIDE);
 }
 
 void WindowImplWin32::SetTitle(const std::string& title)
