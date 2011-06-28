@@ -1,7 +1,7 @@
 #ifndef WINDOWIMPLWIN32_H_
 #define WINDOWIMPLWIN32_H_
 
-#include <WindowImpl.h>
+#include <PCM/WindowImpl.h>
 #include <windows.h>
 
 namespace PCM
@@ -34,6 +34,8 @@ public:
 	 */
 	virtual void ProcessEvents(bool block);
 	virtual void Display();
+	virtual void Show(bool show);
+	virtual void SetTitle(const std::string& title);
 
 private:
 	/*

@@ -1,10 +1,14 @@
+// PCM includes
 #include <PCM/Win32/WindowImplWin32.h>
-#include <Exceptions.h>
+#include <PCM/Exceptions.h>
+#include <PCM/Trace.h>
+
+// OpenGL includes
 #include <GL/glew.h>
 #include <GL/wglew.h>
 
+// Other includes
 #include <iostream>
-#include <Trace.h>
 
 namespace PCM
 {
@@ -219,6 +223,16 @@ WindowImplWin32::WindowImplWin32(const WindowMode& mode,
 WindowImplWin32::~WindowImplWin32()
 {
 	DestroyOpenGLWindow();
+}
+
+void WindowImplWin32::Show(bool show)
+{
+	// FIXME
+}
+
+void WindowImplWin32::SetTitle(const std::string& title)
+{
+	// FIXME
 }
 
 LRESULT CALLBACK WindowImplWin32::GlobalOnEvent(HWND handle, UINT message,
