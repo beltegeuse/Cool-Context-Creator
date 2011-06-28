@@ -295,6 +295,7 @@ void WindowImplWin32::ProcessEvent(UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_DESTROY:
 	{
 		// Here we must cleanup resources !
+		TRACE("[EVENT] Destroy");
 		DestroyOpenGLWindow();
 		break;
 	}
@@ -306,7 +307,7 @@ void WindowImplWin32::ProcessEvent(UINT message, WPARAM wParam, LPARAM lParam)
 		// The mouse has moved, if the cursor is in our window we must refresh the cursor
 		//if (LOWORD(lParam) == HTCLIENT)
 		//	SetCursor(myCursor);
-
+		TRACE("[EVENT] SetCursor");
 		break;
 	}
 
@@ -315,6 +316,7 @@ void WindowImplWin32::ProcessEvent(UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		Event event;
 		event.Type = Event::Closed;
+		TRACE("[EVENT] Close");
 		PushEvent(event);
 		break;
 	}
@@ -335,7 +337,9 @@ void WindowImplWin32::ProcessEvent(UINT message, WPARAM wParam, LPARAM lParam)
 			event.Type = Event::Resized;
 			event.Size.Width = m_Width;
 			event.Size.Height = m_Height;
+			TRACE("[EVENT] Resize : " << m_Width << "x" << m_Height);
 			PushEvent(event);
+
 			break;
 		}
 	}
@@ -345,6 +349,7 @@ void WindowImplWin32::ProcessEvent(UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		Event event;
 		event.Type = Event::GainedFocus;
+		TRACE("[EVENT] SetFocus");
 		PushEvent(event);
 		break;
 	}
@@ -354,6 +359,7 @@ void WindowImplWin32::ProcessEvent(UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		Event event;
 		event.Type = Event::LostFocus;
+		TRACE("[EVENT] LostFocus");
 		PushEvent(event);
 		break;
 	}
@@ -366,6 +372,7 @@ void WindowImplWin32::ProcessEvent(UINT message, WPARAM wParam, LPARAM lParam)
 			Event event;
 			event.Type = Event::TextEntered;
 			event.Text.Character = static_cast<char> (wParam);
+			TRACE("[EVENT] Text : " << event.Text.Character);
 			PushEvent(event);
 		}
 		break;
@@ -383,6 +390,7 @@ void WindowImplWin32::ProcessEvent(UINT message, WPARAM wParam, LPARAM lParam)
 			event.Key.Control = HIWORD(GetAsyncKeyState(VK_CONTROL)) != 0;
 			event.Key.Shift = HIWORD(GetAsyncKeyState(VK_SHIFT)) != 0;
 			event.Key.Code = VirtualKeyCodeToSF(wParam, lParam);
+			TRACE("[EVENT] KeyDown : " << event.Key.Code);
 			PushEvent(event);
 		}
 		break;
@@ -398,6 +406,7 @@ void WindowImplWin32::ProcessEvent(UINT message, WPARAM wParam, LPARAM lParam)
 		event.Key.Control = HIWORD(GetAsyncKeyState(VK_CONTROL)) != 0;
 		event.Key.Shift = HIWORD(GetAsyncKeyState(VK_SHIFT)) != 0;
 		event.Key.Code = VirtualKeyCodeToSF(wParam, lParam);
+		TRACE("[EVENT] KeyUp : " << event.Key.Code);
 		PushEvent(event);
 		break;
 	}
@@ -416,6 +425,7 @@ void WindowImplWin32::ProcessEvent(UINT message, WPARAM wParam, LPARAM lParam)
 		event.MouseWheel.Delta = static_cast<int> (HIWORD(wParam)) / 120;
 		event.MouseButton.X = position.x;
 		event.MouseButton.Y = position.y;
+		TRACE("[EVENT] MouseWheel : " << event.MouseWheel.Delta);
 		PushEvent(event);
 		break;
 	}
@@ -428,6 +438,7 @@ void WindowImplWin32::ProcessEvent(UINT message, WPARAM wParam, LPARAM lParam)
 		event.MouseButton.Button = Mouse::Left;
 		event.MouseButton.X = static_cast<int> (LOWORD(lParam));
 		event.MouseButton.Y = static_cast<int> (HIWORD(lParam));
+		TRACE("[EVENT] Left Mouse button down");
 		PushEvent(event);
 		break;
 	}
@@ -440,6 +451,7 @@ void WindowImplWin32::ProcessEvent(UINT message, WPARAM wParam, LPARAM lParam)
 		event.MouseButton.Button = Mouse::Left;
 		event.MouseButton.X = static_cast<int> (LOWORD(lParam));
 		event.MouseButton.Y = static_cast<int> (HIWORD(lParam));
+		TRACE("[EVENT] Left Mouse button up");
 		PushEvent(event);
 		break;
 	}
@@ -452,6 +464,7 @@ void WindowImplWin32::ProcessEvent(UINT message, WPARAM wParam, LPARAM lParam)
 		event.MouseButton.Button = Mouse::Right;
 		event.MouseButton.X = static_cast<int> (LOWORD(lParam));
 		event.MouseButton.Y = static_cast<int> (HIWORD(lParam));
+		TRACE("[EVENT] Right Mouse button down");
 		PushEvent(event);
 		break;
 	}
@@ -464,6 +477,7 @@ void WindowImplWin32::ProcessEvent(UINT message, WPARAM wParam, LPARAM lParam)
 		event.MouseButton.Button = Mouse::Right;
 		event.MouseButton.X = static_cast<int> (LOWORD(lParam));
 		event.MouseButton.Y = static_cast<int> (HIWORD(lParam));
+		TRACE("[EVENT] Right Mouse button up");
 		PushEvent(event);
 		break;
 	}
@@ -476,6 +490,7 @@ void WindowImplWin32::ProcessEvent(UINT message, WPARAM wParam, LPARAM lParam)
 		event.MouseButton.Button = Mouse::Middle;
 		event.MouseButton.X = static_cast<int> (LOWORD(lParam));
 		event.MouseButton.Y = static_cast<int> (HIWORD(lParam));
+		TRACE("[EVENT] Wheel Mouse button down");
 		PushEvent(event);
 		break;
 	}
@@ -488,6 +503,7 @@ void WindowImplWin32::ProcessEvent(UINT message, WPARAM wParam, LPARAM lParam)
 		event.MouseButton.Button = Mouse::Middle;
 		event.MouseButton.X = static_cast<int> (LOWORD(lParam));
 		event.MouseButton.Y = static_cast<int> (HIWORD(lParam));
+		TRACE("[EVENT] Wheel Mouse button up");
 		PushEvent(event);
 		break;
 	}
@@ -532,6 +548,7 @@ void WindowImplWin32::ProcessEvent(UINT message, WPARAM wParam, LPARAM lParam)
 
 			Event event;
 			event.Type = Event::MouseEntered;
+			TRACE("[EVENT] CursorIn");
 			PushEvent(event);
 		}
 
@@ -539,6 +556,7 @@ void WindowImplWin32::ProcessEvent(UINT message, WPARAM wParam, LPARAM lParam)
 		event.Type = Event::MouseMoved;
 		event.MouseMove.X = static_cast<int> (LOWORD(lParam));
 		event.MouseMove.Y = static_cast<int> (HIWORD(lParam));
+		TRACE("[EVENT] MouseMove : " << event.MouseMove.X << "x" << event.MouseMove.Y);
 		PushEvent(event);
 		break;
 	}
@@ -550,6 +568,7 @@ void WindowImplWin32::ProcessEvent(UINT message, WPARAM wParam, LPARAM lParam)
 
 		Event event;
 		event.Type = Event::MouseLeft;
+		TRACE("[EVENT] MouseLeave");
 		PushEvent(event);
 		break;
 	}
