@@ -487,6 +487,7 @@ bool WindowImplLinux::ProcessEvent(XEvent windowEvent)
 	// Convert the X11 event to a sf::Event
 	switch (windowEvent.type)
 	{
+
 		// Destroy event
 		case DestroyNotify :
 		{
