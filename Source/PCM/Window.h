@@ -41,7 +41,6 @@ public:
 	/*
 	 * Public methods
 	 */
-	//TODO: Add Time methods
 	// Getters
         /**
          * Returns the width of the window
@@ -59,7 +58,7 @@ public:
         /**
          * Returns the time elapsed since the creation of the window and the last frame displayed.
          *
-         * \return Time elapsed in seconds
+         * \return Time elapsed in milliseconds
          */
 	Uint32 GetFrameTime() const;
 
