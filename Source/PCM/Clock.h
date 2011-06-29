@@ -12,6 +12,10 @@
 
 namespace PCM
 {
+/**
+ * Sleep
+ * \param time The time for the sleep in milliseconds
+ */
 void Sleep(Uint32 time);
 
 class Clock {
@@ -45,7 +49,7 @@ public:
         /**
          * Return the time elapsed since the last reset or creation of the clock.
          *
-         * \return The time elapsed in seconds (micro ? TODO: be sure)
+         * \return The time elapsed in milliseconds
          */
 	Uint32 GetElapsedTime() const;
 
@@ -54,7 +58,7 @@ private:
 	 * Private methods
 	 */
         /**
-         * Returns the current time, expressed in seconds (micro ? TODO: be sure) since the Epoch.
+         * Returns the current time, expressed in milliseconds since the Epoch.
          *
          * \return Current time in seconds
          */
