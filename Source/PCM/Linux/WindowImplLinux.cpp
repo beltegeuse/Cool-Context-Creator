@@ -21,6 +21,8 @@
 #include <string.h>
 #include <unistd.h>
 
+#include <sstream>
+
 namespace PCM {
 namespace priv {
 
@@ -452,7 +454,6 @@ bool WindowImplLinux::ProcessEvent(XEvent windowEvent)
 	// SFML only wants repeated KeyPress events. Thus, we have to:
 	// - Discard duplicated KeyRelease events when EnableKeyRepeat is true
 	// - Discard both duplicated KeyPress and KeyRelease events when EnableKeyRepeat is false
-
 	// Detect repeated key events
 	if ((windowEvent.type == KeyPress) || (windowEvent.type == KeyRelease))
 	{
@@ -491,6 +492,7 @@ bool WindowImplLinux::ProcessEvent(XEvent windowEvent)
 		// Destroy event
 		case DestroyNotify :
 		{
+                        TRACE("The window is destroyed.");
 			// The window is about to be destroyed : we must cleanup resources
 			//CleanUp(); //FIXME
 			break;
@@ -499,6 +501,7 @@ bool WindowImplLinux::ProcessEvent(XEvent windowEvent)
 		// Gain focus event
 		case FocusIn :
 		{
+                        TRACE("The window gains focus.");
 			// Update the input context
 			if (m_InputContext)
 				XSetICFocus(m_InputContext);
@@ -512,6 +515,7 @@ bool WindowImplLinux::ProcessEvent(XEvent windowEvent)
 		// Lost focus event
 		case FocusOut :
 		{
+                        TRACE("The window loses focus.");
 			// Update the input context
 			if (m_InputContext)
 				XUnsetICFocus(m_InputContext);
@@ -530,6 +534,13 @@ bool WindowImplLinux::ProcessEvent(XEvent windowEvent)
 				m_Width = windowEvent.xconfigure.width;
 				m_Height = windowEvent.xconfigure.height;
 
+                                // For trace
+                                std::stringstream sstrace;
+                                sstrace << "The window is resized to (" << m_Width << " , " << m_Height << ")";
+                                TRACE(sstrace.str());
+
+                                // End of trace
+
 				Event event;
 				event.Type = Event::Resized;
 				event.Size.Width = m_Width;
@@ -544,6 +555,7 @@ bool WindowImplLinux::ProcessEvent(XEvent windowEvent)
 		{
 			if ((windowEvent.xclient.format == 32) && (windowEvent.xclient.data.l[0]) == static_cast<long>(m_AtomClose))
 			{
+                                TRACE("The window is closed");
 				Event event;
 				event.Type = Event::Closed;
 				PushEvent(event);
@@ -559,6 +571,15 @@ bool WindowImplLinux::ProcessEvent(XEvent windowEvent)
 			char buffer[32];
 			KeySym symbol;
 			XLookupString(&windowEvent.xkey, buffer, sizeof(buffer), &symbol, &keyboard);
+
+                        // For the trace
+                        // TODO : handle the special keys
+                        std::string strace(buffer);
+                        std::stringstream sstrace;
+                        sstrace << "A key has been pressed : " << strace;
+                        TRACE(sstrace.str());
+                        // End of trace
+
 
 			// Fill the event parameters
 			// TODO: if modifiers are wrong, use XGetModifierMapping to retrieve the actual modifiers mapping
@@ -614,10 +635,19 @@ bool WindowImplLinux::ProcessEvent(XEvent windowEvent)
 		// Key up event
 		case KeyRelease :
 		{
+
 			// Get the keysym of the key that has been pressed
 			char buffer[32];
 			KeySym symbol;
 			XLookupString(&windowEvent.xkey, buffer, 32, &symbol, NULL);
+
+                        // For the trace
+                        // TODO : handle the special keys
+                        std::string strace(buffer);
+                        std::stringstream sstrace;
+                        sstrace << "A key has been released : " << strace;
+                        TRACE(sstrace.str());
+                        // End of trace
 
 			// Fill the event parameters
 			Event event;
@@ -644,11 +674,16 @@ bool WindowImplLinux::ProcessEvent(XEvent windowEvent)
 				event.MouseButton.Y = windowEvent.xbutton.y;
 				switch (button)
 				{
-					case Button1 : event.MouseButton.Button = Mouse::Left; break;
-					case Button2 : event.MouseButton.Button = Mouse::Middle; break;
-					case Button3 : event.MouseButton.Button = Mouse::Right; break;
-					case 8 : event.MouseButton.Button = Mouse::XButton1; break;
-					case 9 : event.MouseButton.Button = Mouse::XButton2; break;
+                                        case Button1 : event.MouseButton.Button = Mouse::Left;
+                                                       TRACE("Mouse left button pressed"); break;
+                                        case Button2 : event.MouseButton.Button = Mouse::Middle;
+                                                       TRACE("Mouse middle button pressed"); break;
+                                        case Button3 : event.MouseButton.Button = Mouse::Right;
+                                                       TRACE("Mouse right button pressed"); break;
+                                        case 8 : event.MouseButton.Button = Mouse::XButton1;
+                                                       TRACE("Mouse button 1 pressed"); break;
+                                        case 9 : event.MouseButton.Button = Mouse::XButton2;
+                                                       TRACE("Mouse button 2 pressed"); break;
 				}
 				PushEvent(event);
 			}
@@ -667,11 +702,16 @@ bool WindowImplLinux::ProcessEvent(XEvent windowEvent)
 				event.MouseButton.Y = windowEvent.xbutton.y;
 				switch (button)
 				{
-					case Button1 : event.MouseButton.Button = Mouse::Left; break;
-					case Button2 : event.MouseButton.Button = Mouse::Middle; break;
-					case Button3 : event.MouseButton.Button = Mouse::Right; break;
-					case 8 : event.MouseButton.Button = Mouse::XButton1; break;
-					case 9 : event.MouseButton.Button = Mouse::XButton2; break;
+                                        case Button1 : event.MouseButton.Button = Mouse::Left;
+                                                       TRACE("Mouse left button released"); break;
+                                        case Button2 : event.MouseButton.Button = Mouse::Middle;
+                                                       TRACE("Mouse right button released"); break;
+                                        case Button3 : event.MouseButton.Button = Mouse::Right;
+                                                       TRACE("Mouse middle button released"); break;
+                                        case 8 : event.MouseButton.Button = Mouse::XButton1;
+                                                       TRACE("Mouse button 1 released"); break;
+                                        case 9 : event.MouseButton.Button = Mouse::XButton2;
+                                                       TRACE("Mouse button 2 released"); break;
 				}
 				PushEvent(event);
 			}
@@ -680,6 +720,8 @@ bool WindowImplLinux::ProcessEvent(XEvent windowEvent)
 				Event event;
 				event.Type = Event::MouseWheelMoved;
 				event.MouseWheel.Delta = windowEvent.xbutton.button == Button4 ? 1 : -1;
+                                if (event.MouseWheel.Delta)
+                                    TRACE("Mouse wheel moved."); //TODO : how can we know if it went up or not?
 				event.MouseWheel.X = windowEvent.xbutton.x;
 				event.MouseWheel.Y = windowEvent.xbutton.y;
 				PushEvent(event);
@@ -695,12 +737,25 @@ bool WindowImplLinux::ProcessEvent(XEvent windowEvent)
 			event.MouseMove.X = windowEvent.xmotion.x;
 			event.MouseMove.Y = windowEvent.xmotion.y;
 			PushEvent(event);
+
+                        // For the trace
+                        std::stringstream otrace;
+                        otrace << "Mouse new position : (";
+                        otrace << event.MouseMove.X;
+                        otrace << " , ";
+                        otrace << event.MouseMove.Y;
+                        otrace << ")";
+                        TRACE(otrace.str());
+                        // End of trace
+
+
 			break;
 		}
 
 		// Mouse entered
 		case EnterNotify :
 		{
+                        TRACE("The mouse entered the window area");
 			Event event;
 			event.Type = Event::MouseEntered;
 			PushEvent(event);
@@ -710,6 +765,7 @@ bool WindowImplLinux::ProcessEvent(XEvent windowEvent)
 		// Mouse left
 		case LeaveNotify :
 		{
+                        TRACE("The mouse left the window area");
 			Event event;
 			event.Type = Event::MouseLeft;
 			PushEvent(event);

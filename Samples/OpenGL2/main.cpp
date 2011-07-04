@@ -91,7 +91,7 @@ int main(int argc, char ** argv)
 		PCM::Event event;
 		while(win.PoolEvent(event))
 		{
-			std::cout << "Event !" << std::endl;
+                        //std::cout << "Event !" << std::endl;
 			if(event.Type == PCM::Event::Closed)
 			{
 				std::cout << "Close ... " << std::endl;
