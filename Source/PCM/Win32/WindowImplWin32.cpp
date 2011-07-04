@@ -545,7 +545,7 @@ void WindowImplWin32::ProcessEvent(UINT message, WPARAM wParam, LPARAM lParam)
 
 			Event event;
 			event.Type = Event::MouseEntered;
-			TRACE("[EVENT] CursorIn");
+                        TRACE("[EVENT] CursorIn");
 			PushEvent(event);
 		}
 
