@@ -5,7 +5,7 @@
 
 // OpenGL includes
 #include <GL/gl.h>
-#include <PCM/glext/wglext.h>
+#include <C3/glext/wglext.h>
 
 // Other includes
 #include <iostream>
