@@ -2,7 +2,7 @@
 #include <C3/Linux/WindowImplLinux.h>
 #include <C3/Exceptions.h>
 #include <C3/Trace.h>
-
+#include <C3/Config.h>
 // OpenGL Includes
 #include <GL/gl.h>
 #include <GL/glx.h>
@@ -568,8 +568,8 @@ bool WindowImplLinux::ProcessEvent(XEvent windowEvent)
 			event.Key.Alt = windowEvent.xkey.state & Mod1Mask;
 			event.Key.Control = windowEvent.xkey.state & ControlMask;
 			event.Key.Shift = windowEvent.xkey.state & ShiftMask;
-                        //event.Key.System = windowEvent.xkey.state & Mod4Mask; //FIXME
-                        TRACE("[EVENT] KeyDown : " << event.Key.Code);
+			//event.Key.System = windowEvent.xkey.state & Mod4Mask; //FIXME
+			TRACE("[EVENT] KeyDown : " << event.Key.Code);
 			PushEvent(event);
 
 			// Generate a TextEntered event
@@ -603,7 +603,8 @@ bool WindowImplLinux::ProcessEvent(XEvent windowEvent)
 					{
 						Event textEvent;
 						textEvent.Type = Event::TextEntered;
-						//textEvent.Text.Unicode = static_cast<Uint32>(keyBuffer[0]); //FIXME
+						textEvent.Text.Character = (keyBuffer[0]);
+						TRACE("[EVENT] Text : " << static_cast<C3::Uint32>(keyBuffer[0]) << " " << textEvent.Text.Character);
 						PushEvent(textEvent);
 					}
 				}
