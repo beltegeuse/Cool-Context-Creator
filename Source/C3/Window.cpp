@@ -5,7 +5,7 @@ namespace C3
 {
 
 Window::Window() :
-	m_Window(NULL),
+	m_Window(0),
 	m_LastFrameTime(0),
 	m_FramerateLimit(0)
 {
@@ -56,7 +56,10 @@ bool Window::IsOpened() const
 void Window::Close()
 {
 	if (m_Window)
+	{
 		delete m_Window;
+		m_Window = 0;
+	}
 }
 
 int Window::GetWidth() const

@@ -164,8 +164,7 @@ WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 	 */
 	TRACE( "Creating colormap" );
 	XSetWindowAttributes swa;
-	Colormap cmap;
-	swa.colormap = cmap = XCreateColormap( m_Display,
+	swa.colormap = m_Colormap = XCreateColormap( m_Display,
 										 RootWindow( m_Display, vi->screen ),
 										 vi->visual, AllocNone );
 	swa.background_pixmap = None ;
