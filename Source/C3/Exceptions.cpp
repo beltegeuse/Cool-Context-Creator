@@ -1,10 +1,10 @@
 //==========================================================
 // En-tetes
 //==========================================================
-#include <PCM/Exceptions.h>
+#include <C3/Exceptions.h>
 #include <sstream>
 
-namespace PCM
+namespace C3
 {
 namespace priv
 {

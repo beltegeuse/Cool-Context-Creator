@@ -4,14 +4,14 @@
 // STL include
 #include <string>
 
-// PCM Includes
-#include <PCM/Exceptions.h>
-#include <PCM/WindowMode.h>
-#include <PCM/OpenGLContextSettings.h>
-#include <PCM/WindowImpl.h>
-#include <PCM/Clock.h>
+// C3 Includes
+#include <C3/Exceptions.h>
+#include <C3/WindowMode.h>
+#include <C3/OpenGLContextSettings.h>
+#include <C3/WindowImpl.h>
+#include <C3/Clock.h>
 
-namespace PCM
+namespace C3
 {
 class Window
 {

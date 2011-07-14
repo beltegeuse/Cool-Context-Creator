@@ -12,7 +12,7 @@ ADD_EXECUTABLE(OpenGL2Test ${OpenGL2Test_SRC})
 
 target_link_libraries(
   OpenGL2Test
-  PCM
+  C3
 )
 
 SET_TARGET_PROPERTIES(OpenGL2Test PROPERTIES

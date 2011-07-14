@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include <PCM/Window.h>
+#include <C3/Window.h>
 
 
 #include <GL/gl.h>
@@ -60,9 +60,9 @@ int main(int argc, char ** argv)
 	std::cout << "Lancement ..." << std::endl;
 
 	// Object Creation
-	PCM::Window win;
-	PCM::WindowMode mode(800,600);
-	PCM::OpenGLContextSettings openGLSettings(2,1);
+	C3::Window win;
+	C3::WindowMode mode(800,600);
+	C3::OpenGLContextSettings openGLSettings(2,1);
 
 	// Create the window
 	std::cout << "Creation ..." << std::endl;
@@ -88,18 +88,18 @@ int main(int argc, char ** argv)
 	while(win.IsOpened())
 	{
 		// Events
-		PCM::Event event;
+		C3::Event event;
 		while(win.PoolEvent(event))
 		{
                         //std::cout << "Event !" << std::endl;
-			if(event.Type == PCM::Event::Closed)
+			if(event.Type == C3::Event::Closed)
 			{
 				std::cout << "Close ... " << std::endl;
 				win.Close();
 			}
-			else if(event.Type == PCM::Event::KeyPressed)
+			else if(event.Type == C3::Event::KeyPressed)
 			{
-				if(event.Key.Code == PCM::Key::Escape)
+				if(event.Key.Code == C3::Key::Escape)
 				{
 					std::cout << "Close ... " << std::endl;
 					win.Close();

@@ -14,25 +14,25 @@ ENDIF(CMAKE_BUILD_TYPE MATCHES debug)
 #
 # Multi-platform sources
 #
-SET(LIB_PCM_SRCS
-	PCM/Exceptions.cpp
-	PCM/Window.cpp
-	PCM/WindowImpl.cpp
-	PCM/Clock.cpp
+SET(LIB_C3_SRCS
+	C3/Exceptions.cpp
+	C3/Window.cpp
+	C3/WindowImpl.cpp
+	C3/Clock.cpp
 )
 
 #
 # Specific platform sources
 #
 IF(WIN32)
-SET(LIB_PCM_SRCS
-	${LIB_PCM_SRCS}
-	PCM/Win32/WindowImplWin32.cpp
+SET(LIB_C3_SRCS
+	${LIB_C3_SRCS}
+	C3/Win32/WindowImplWin32.cpp
 )
 ELSE()
-SET(LIB_PCM_SRCS
-	${LIB_PCM_SRCS}
-	PCM/Linux/WindowImplLinux.cpp
+SET(LIB_C3_SRCS
+	${LIB_C3_SRCS}
+	C3/Linux/WindowImplLinux.cpp
 )
 ENDIF()
 
@@ -40,14 +40,14 @@ ENDIF()
 # Headers Installation
 #
 INSTALL(FILES
-	PCM/Events.h
-	PCM/OpenGLContextSettings.h
-	PCM/Window.h
-	PCM/WindowImpl.h
-	PCM/WindowMode.h
-	PCM/Clock.h
-	PCM/Config.h
-DESTINATION ${PROJECT_BUILD_PATH}/include/PCM)
+	C3/Events.h
+	C3/OpenGLContextSettings.h
+	C3/Window.h
+	C3/WindowImpl.h
+	C3/WindowMode.h
+	C3/Clock.h
+	C3/Config.h
+DESTINATION ${PROJECT_BUILD_PATH}/include/C3)
 
 #
 # Lib configuration
@@ -56,15 +56,15 @@ INCLUDE_DIRECTORIES(
 	${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-ADD_LIBRARY(PCM SHARED ${LIB_PCM_SRCS})
+ADD_LIBRARY(C3 SHARED ${LIB_C3_SRCS})
 
 target_link_libraries(
-  PCM
+  C3
   ${OPENGL_LIBRARY}
   ${GLEW_LIBRARY}
 )
 
-install(TARGETS PCM 
+install(TARGETS C3 
   RUNTIME DESTINATION ${PROJECT_BUILD_PATH}
   LIBRARY DESTINATION ${PROJECT_BUILD_PATH}
   ARCHIVE DESTINATION ${PROJECT_BUILD_PATH}

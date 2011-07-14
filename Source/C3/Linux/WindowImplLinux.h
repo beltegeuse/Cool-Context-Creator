@@ -1,21 +1,14 @@
-/*
- * WindowImplLinux.h
- *
- *  Created on: Jun 25, 2011
- *      Author: adrien
- */
-
 #ifndef WINDOWIMPLLINUX_H_
 #define WINDOWIMPLLINUX_H_
 
 // PCM Includes
-#include <PCM/WindowImpl.h>
+#include <C3/WindowImpl.h>
 
 // X Includes
 #include <X11/Xlib.h>
 #include <GL/glx.h>
 
-namespace PCM
+namespace C3
 {
 namespace priv
 {

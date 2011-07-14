@@ -25,7 +25,7 @@
 #ifndef TRACE_H_
 #define TRACE_H_
 
-namespace PCM
+namespace C3
 {
 
 #ifdef _DEBUG

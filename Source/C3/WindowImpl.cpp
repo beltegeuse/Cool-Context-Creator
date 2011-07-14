@@ -1,14 +1,14 @@
-#include <PCM/WindowImpl.h>
+#include <C3/WindowImpl.h>
 
 #ifdef WIN32
-#include <PCM/Win32/WindowImplWin32.h>
-typedef PCM::priv::WindowImplWin32 WindowImplType;
+#include <C3/Win32/WindowImplWin32.h>
+typedef C3::priv::WindowImplWin32 WindowImplType;
 #else
-#include <PCM/Linux/WindowImplLinux.h>
-typedef PCM::priv::WindowImplLinux WindowImplType;
+#include <C3/Linux/WindowImplLinux.h>
+typedef C3::priv::WindowImplLinux WindowImplType;
 #endif
 
-namespace PCM
+namespace C3
 {
 namespace priv
 {
@@ -37,7 +37,7 @@ int WindowImpl::GetHeight() const
 	return m_Height;
 }
 
-bool WindowImpl::GetEvent(PCM::Event& event)
+bool WindowImpl::GetEvent(C3::Event& event)
 {
 	if (m_Events.empty())
 	{

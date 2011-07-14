@@ -1,14 +1,7 @@
-/*
- * WindowImplLinux.cpp
- *
- *  Created on: Jun 25, 2011
- *      Author: adrien
- */
-
-// PCM Includes
-#include <PCM/Linux/WindowImplLinux.h>
-#include <PCM/Exceptions.h>
-#include <PCM/Trace.h>
+// C3 Includes
+#include <C3/Linux/WindowImplLinux.h>
+#include <C3/Exceptions.h>
+#include <C3/Trace.h>
 
 // OpenGL Includes
 #include <GL/gl.h>
@@ -23,7 +16,7 @@
 
 #include <sstream>
 
-namespace PCM {
+namespace C3 {
 namespace priv {
 
 #define GLX_CONTEXT_MAJOR_VERSION_ARB       0x2091

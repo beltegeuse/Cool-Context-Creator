@@ -1,10 +1,10 @@
 #ifndef WINDOWIMPLWIN32_H_
 #define WINDOWIMPLWIN32_H_
 
-#include <PCM/WindowImpl.h>
+#include <C3/WindowImpl.h>
 #include <windows.h>
 
-namespace PCM
+namespace C3
 {
 namespace priv
 {

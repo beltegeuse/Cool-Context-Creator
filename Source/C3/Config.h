@@ -1,17 +1,10 @@
-/*
- * Config.h
- *
- *  Created on: Jun 27, 2011
- *      Author: adrien
- */
-
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
 ////////////////////////////////////////////////////////////
 // Define portable fixed-size types
 ////////////////////////////////////////////////////////////
-namespace PCM
+namespace C3
 {
     // All "common" platforms use the same size for char, short and int
     // (basically there are 3 types for 3 sizes, so no other match is possible),

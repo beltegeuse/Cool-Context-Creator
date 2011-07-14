@@ -1,10 +1,3 @@
-/*
- * WindowImpl.h
- *
- *  Created on: Apr 17, 2011
- *      Author: Beltegeuse
- */
-
 #ifndef WINDOWIMPL_H_
 #define WINDOWIMPL_H_
 
@@ -13,11 +6,11 @@
 #include <queue>
 
 // PCM includes
-#include <PCM/WindowMode.h>
-#include <PCM/OpenGLContextSettings.h>
-#include <PCM/Events.h>
+#include <C3/WindowMode.h>
+#include <C3/OpenGLContextSettings.h>
+#include <C3/Events.h>
 
-namespace PCM
+namespace C3
 {
 namespace priv
 {

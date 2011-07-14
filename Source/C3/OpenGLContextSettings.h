@@ -8,7 +8,7 @@
 #ifndef OPENGLCONTEXTSETTINGS_H_
 #define OPENGLCONTEXTSETTINGS_H_
 
-namespace PCM
+namespace C3
 {
 
 struct OpenGLContextSettings

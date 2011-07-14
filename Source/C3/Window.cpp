@@ -1,14 +1,7 @@
-/*
- * Window.cpp
- *
- *  Created on: Apr 17, 2011
- *      Author: Beltegeuse
- */
+#include <C3/Window.h>
+#include <C3/WindowImpl.h>
 
-#include <PCM/Window.h>
-#include <PCM/WindowImpl.h>
-
-namespace PCM
+namespace C3
 {
 
 Window::Window() :

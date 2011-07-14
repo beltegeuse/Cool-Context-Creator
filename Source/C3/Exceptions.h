@@ -7,7 +7,7 @@
 #include <exception>
 #include <string>
 
-namespace PCM
+namespace C3
 {
 namespace priv
 {

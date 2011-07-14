@@ -1,16 +1,9 @@
-/*
- * Clock.h
- *
- *  Created on: Jun 27, 2011
- *      Author: adrien
- */
-
 #ifndef CLOCK_H_
 #define CLOCK_H_
 
-#include <PCM/Config.h>
+#include <C3/Config.h>
 
-namespace PCM
+namespace C3
 {
 /**
  * Sleep

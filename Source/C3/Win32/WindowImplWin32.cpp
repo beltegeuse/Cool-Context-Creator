@@ -1,7 +1,7 @@
-// PCM includes
-#include <PCM/Win32/WindowImplWin32.h>
-#include <PCM/Exceptions.h>
-#include <PCM/Trace.h>
+// C3 includes
+#include <C3/Win32/WindowImplWin32.h>
+#include <C3/Exceptions.h>
+#include <C3/Trace.h>
 
 // OpenGL includes
 #include <GL/gl.h>
@@ -10,7 +10,7 @@
 // Other includes
 #include <iostream>
 
-namespace PCM
+namespace C3
 {
 namespace priv
 {

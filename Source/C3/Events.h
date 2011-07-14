@@ -1,6 +1,6 @@
 #ifndef EVENTS_H_
 #define EVENTS_H_
-namespace PCM
+namespace C3
 {
 
 namespace Key

@@ -1,4 +1,4 @@
-PROJECT(PortableContextMaking)
+PROJECT(Cool-Context-Creator)
 
 #------- Configuration ------------
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)

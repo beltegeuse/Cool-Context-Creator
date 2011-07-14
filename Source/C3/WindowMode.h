@@ -1,14 +1,7 @@
-/*
- * WindowMode.h
- *
- *  Created on: Apr 17, 2011
- *      Author: Beltegeuse
- */
-
 #ifndef WINDOWMODE_H_
 #define WINDOWMODE_H_
 
-namespace PCM
+namespace C3
 {
 
 struct WindowMode

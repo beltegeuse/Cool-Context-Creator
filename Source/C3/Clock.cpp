@@ -1,11 +1,4 @@
-/*
- * Clock.cpp
- *
- *  Created on: Jun 27, 2011
- *      Author: adrien
- */
-
-#include "Clock.h"
+#include <C3/Clock.h>
 
 #ifdef WIN32
 #include <windows.h>
@@ -14,7 +7,7 @@
 #include <sys/time.h>
 #endif
 
-namespace PCM {
+namespace C3 {
 void Sleep(Uint32 time)
 {
 #ifdef WIN32
