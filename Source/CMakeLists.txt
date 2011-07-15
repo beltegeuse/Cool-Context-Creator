@@ -8,7 +8,9 @@ IF(CMAKE_BUILD_TYPE MATCHES debug)
 	IF(LINUX)
 		ADD_DEFINITIONS("-pg")
 	ENDIF()
-    #SET(CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_DEBUG} " -D_DEBUG -ansi -Wall -Wextra -Wfatal-errors -pedantic -Wmain -Wswitch-default -Wunreachable-code -Winit-self -Wshadow -Wwrite-strings -Wuninitialized") #Pour afficher les warning lors de la compilation
+	IF(DEBUG_TRACE)
+		ADD_DEFINITIONS("-D_TRACE")
+	ENDIF()
 ENDIF(CMAKE_BUILD_TYPE MATCHES debug)
 
 #

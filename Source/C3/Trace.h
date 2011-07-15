@@ -28,7 +28,7 @@
 namespace C3
 {
 
-#ifdef _DEBUG
+#ifdef _TRACE
 #define TRACE(x) std::cout << "[TRACE] " << x << std::endl
 
 #else
