@@ -202,7 +202,7 @@ WindowImplWin32::WindowImplWin32(const WindowMode& mode,
 	if (wglCreateContextAttribsARB != 0)
 	{
 		m_OpenGLContext = wglCreateContextAttribsARB(m_DeviceContext, 0, attribs);
-		wglMakeCurrent(NULL, NULL);
+		wglMakeCurrent(m_DeviceContext, NULL);
 		wglDeleteContext(tempContext);
 		wglMakeCurrent(m_DeviceContext, m_OpenGLContext);
 	}
@@ -293,7 +293,7 @@ void WindowImplWin32::ProcessEvent(UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		// Here we must cleanup resources !
 		TRACE("[EVENT] Destroy");
-		DestroyOpenGLWindow();
+//		DestroyOpenGLWindow();
 		break;
 	}
 
@@ -794,35 +794,24 @@ void WindowImplWin32::DestroyOpenGLWindow()
 {
 	if (m_OpenGLContext) // Do We Have A Rendering Context?
 	{
-		if (!wglMakeCurrent(NULL, NULL)) // Are We Able To Release The DC And RC Contexts?
-		{
-			throw CException("Release Of DC And RC Failed.");
-		}
-
-		if (!wglDeleteContext(m_OpenGLContext)) // Are We Able To Delete The RC?
-		{
-			throw CException("Release Rendering Context Failed.");
-		}
-		m_OpenGLContext = NULL; // Set RC To NULL
+		TRACE("[DEBUG] Delete Context");
+		wglMakeCurrent(NULL, NULL);
+		wglDeleteContext(m_OpenGLContext);
 	}
 
-	if (m_OpenGLContext && !ReleaseDC(m_Handle, m_DeviceContext)) // Are We Able To Release The DC
+	if (m_DeviceContext) // Are We Able To Release The DC
 	{
-		throw CException("Release Device Context Failed.");
-		m_Handle = NULL; // Set DC To NULL
+		TRACE("[DEBUG] Delete Device Context");
+		ReleaseDC(m_Handle, m_DeviceContext);
 	}
 
-	if (m_Handle && !DestroyWindow(m_Handle)) // Are We Able To Destroy The Window?
+	if (m_Handle) // Are We Able To Destroy The Window?
 	{
-		throw CException("Could Not Release hWnd.");
-		m_Handle = NULL; // Set hWnd To NULL
+		TRACE("[DEBUG] Delete Handle");
+		DestroyWindow(m_Handle);
 	}
 
-	if (!UnregisterClass(ClsName, m_hInstance)) // Are We Able To Unregister Class
-	{
-		throw CException("Could Not Unregister Class.");
-		m_hInstance = NULL; // Set hInstance To NULL
-	}
+	UnregisterClass(ClsName, m_hInstance);
 }
 
 }
