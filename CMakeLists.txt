@@ -12,7 +12,13 @@ SET ( DEBUG_TRACE OFF CACHE BOOL
 
 
 # -- Dependancies
-FIND_PACKAGE(OpenGL REQUIRED)
+MESSAGE("Dependancies search ... ")
+FIND_PACKAGE(OpenGL)
+IF(OPENGL_FOUND)
+  MESSAGE(STATUS "Find OpenGL")
+ELSE(OPENGL_FOUND)
+  MESSAGE(FATAL_ERROR "You must install OpenGL")
+ENDIF(OPENGL_FOUND)
 
 # * -- To install project ---
 SET(PROJECT_BUILD_PATH ${CMAKE_SOURCE_DIR}/Build)
