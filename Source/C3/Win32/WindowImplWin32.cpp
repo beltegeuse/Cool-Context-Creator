@@ -211,6 +211,13 @@ WindowImplWin32::WindowImplWin32(const WindowMode& mode,
 		throw CException("Impossible to settings in the current context.");
 	}
 
+	PFNWGLSWAPINTERVALEXTPROC wglSwapInterval = reinterpret_cast<PFNWGLSWAPINTERVALEXTPROC>(wglGetProcAddress("wglSwapIntervalEXT"));
+	if(wglSwapInterval != 0)
+	{
+		TRACE("WindowImplWin32::WindowImplWin32 : Disable V-Sync");
+		wglSwapInterval(0);
+	}
+
 	Show(true);
 	UpdateWindow(m_Handle);
 	SetForegroundWindow(m_Handle); // Slightly Higher Priority
