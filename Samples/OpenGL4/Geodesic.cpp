@@ -1,4 +1,5 @@
-#include <pez.h>
+#include <C3/Window.h>
+#include <iostream>
 #include <gl/glew.h>
 #include <glsw.h>
 #include <vectormath.h>
@@ -71,7 +72,7 @@ const char* PezInitialize(int width, int height)
 
     // Set up the projection matrix:
     const float HalfWidth = 0.6f;
-    const float HalfHeight = HalfWidth * PEZ_VIEWPORT_HEIGHT / PEZ_VIEWPORT_WIDTH;
+    const float HalfHeight = HalfWidth * 600.f / 800.f;
     ProjectionMatrix = M4MakeFrustum(-HalfWidth, +HalfWidth, -HalfHeight, +HalfHeight, 5, 150);
 
     // Initialize various state:
@@ -161,11 +162,11 @@ static void LoadEffect()
     const char* gsSource = glswGetShader("Geodesic.Geometry");
     const char* fsSource = glswGetShader("Geodesic.Fragment");
     const char* msg = "Can't find %s shader.  Does '../BicubicPath.glsl' exist?\n";
-    PezCheckCondition(vsSource != 0, msg, "vertex");
-    PezCheckCondition(tcsSource != 0, msg, "tess control");
-    PezCheckCondition(tesSource != 0, msg, "tess eval");
-    PezCheckCondition(gsSource != 0, msg, "geometry");
-    PezCheckCondition(fsSource != 0, msg, "fragment");
+//    PezCheckCondition(vsSource != 0, msg, "vertex");
+//    PezCheckCondition(tcsSource != 0, msg, "tess control");
+//    PezCheckCondition(tesSource != 0, msg, "tess eval");
+//    PezCheckCondition(gsSource != 0, msg, "geometry");
+//    PezCheckCondition(fsSource != 0, msg, "fragment");
 
     GLuint vsHandle = glCreateShader(GL_VERTEX_SHADER);
     GLuint tcsHandle = glCreateShader(GL_TESS_CONTROL_SHADER);
@@ -177,31 +178,31 @@ static void LoadEffect()
     glCompileShader(vsHandle);
     glGetShaderiv(vsHandle, GL_COMPILE_STATUS, &compileSuccess);
     glGetShaderInfoLog(vsHandle, sizeof(compilerSpew), 0, compilerSpew);
-    PezCheckCondition(compileSuccess, "Vertex Shader Errors:\n%s", compilerSpew);
+//    PezCheckCondition(compileSuccess, "Vertex Shader Errors:\n%s", compilerSpew);
 
     glShaderSource(tcsHandle, 1, &tcsSource, 0);
     glCompileShader(tcsHandle);
     glGetShaderiv(tcsHandle, GL_COMPILE_STATUS, &compileSuccess);
     glGetShaderInfoLog(tcsHandle, sizeof(compilerSpew), 0, compilerSpew);
-    PezCheckCondition(compileSuccess, "Tess Control Shader Errors:\n%s", compilerSpew);
+//    PezCheckCondition(compileSuccess, "Tess Control Shader Errors:\n%s", compilerSpew);
 
     glShaderSource(tesHandle, 1, &tesSource, 0);
     glCompileShader(tesHandle);
     glGetShaderiv(tesHandle, GL_COMPILE_STATUS, &compileSuccess);
     glGetShaderInfoLog(tesHandle, sizeof(compilerSpew), 0, compilerSpew);
-    PezCheckCondition(compileSuccess, "Tess Eval Shader Errors:\n%s", compilerSpew);
+//    PezCheckCondition(compileSuccess, "Tess Eval Shader Errors:\n%s", compilerSpew);
 
     glShaderSource(gsHandle, 1, &gsSource, 0);
     glCompileShader(gsHandle);
     glGetShaderiv(gsHandle, GL_COMPILE_STATUS, &compileSuccess);
     glGetShaderInfoLog(gsHandle, sizeof(compilerSpew), 0, compilerSpew);
-    PezCheckCondition(compileSuccess, "Geometry Shader Errors:\n%s", compilerSpew);
+//    PezCheckCondition(compileSuccess, "Geometry Shader Errors:\n%s", compilerSpew);
 
     glShaderSource(fsHandle, 1, &fsSource, 0);
     glCompileShader(fsHandle);
     glGetShaderiv(fsHandle, GL_COMPILE_STATUS, &compileSuccess);
     glGetShaderInfoLog(fsHandle, sizeof(compilerSpew), 0, compilerSpew);
-    PezCheckCondition(compileSuccess, "Fragment Shader Errors:\n%s", compilerSpew);
+//    PezCheckCondition(compileSuccess, "Fragment Shader Errors:\n%s", compilerSpew);
 
     ProgramHandle = glCreateProgram();
     glAttachShader(ProgramHandle, vsHandle);
@@ -213,7 +214,7 @@ static void LoadEffect()
     glLinkProgram(ProgramHandle);
     glGetProgramiv(ProgramHandle, GL_LINK_STATUS, &linkSuccess);
     glGetProgramInfoLog(ProgramHandle, sizeof(compilerSpew), 0, compilerSpew);
-    PezCheckCondition(linkSuccess, "Shader Link Errors:\n%s", compilerSpew);
+//    PezCheckCondition(linkSuccess, "Shader Link Errors:\n%s", compilerSpew);
 
     glUseProgram(ProgramHandle);
 }
@@ -236,12 +237,94 @@ void PezUpdate(unsigned int elapsedMicroseconds)
     const int VK_RIGHT = 0x27;
     const int VK_DOWN = 0x28;
 
-    if (PezIsPressing(VK_RIGHT)) TessLevelInner++;
-    if (PezIsPressing(VK_LEFT))  TessLevelInner = TessLevelInner > 1 ? TessLevelInner - 1 : 1;
-    if (PezIsPressing(VK_UP))    TessLevelOuter++;
-    if (PezIsPressing(VK_DOWN))  TessLevelOuter = TessLevelOuter > 1 ? TessLevelOuter - 1 : 1;
+//    if (PezIsPressing(VK_RIGHT)) TessLevelInner++;
+//    if (PezIsPressing(VK_LEFT))  TessLevelInner = TessLevelInner > 1 ? TessLevelInner - 1 : 1;
+//    if (PezIsPressing(VK_UP))    TessLevelOuter++;
+//    if (PezIsPressing(VK_DOWN))  TessLevelOuter = TessLevelOuter > 1 ? TessLevelOuter - 1 : 1;
 }
 
 void PezHandleMouse(int x, int y, int action)
 {
+}
+
+#if WIN32
+#include <windows.h>
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+#else
+int main(int argc, char ** argv)
+#endif
+{
+	std::cout << "Lancement ..." << std::endl;
+
+	// Object Creation
+	C3::Window win;
+	C3::WindowMode mode(800,600);
+	C3::OpenGLContextSettings openGLSettings(4,0);
+
+	// Create the window
+	std::cout << "Creation ..." << std::endl;
+	win.Create(mode,"OpenGL4",openGLSettings);
+
+	std::cout << "Load ... " << std::endl;
+	LoadEffect();
+	CreateIcosahedron();
+	PezInitialize(800,600);
+
+	// Initialise OpenGL
+	glViewport(0, 0, 800, 600);
+
+	glMatrixMode( GL_PROJECTION );
+	glLoadIdentity();
+	gluPerspective(45.0f,(GLfloat)800/(GLfloat)600,0.1f,100.0f);
+
+	glShadeModel(GL_SMOOTH);							// Enable Smooth Shading
+	glClearColor(0.0f, 0.0f, 0.0f, 0.5f);				// Black Background
+	glClearDepth(1.0f);									// Depth Buffer Setup
+	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
+	glDepthFunc(GL_LEQUAL);								// The Type Of Depth Testing To Do
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculations
+
+	// Draw loop
+	std::cout << "Affichage ..." << std::endl;
+	while(win.IsOpened())
+	{
+		// Events
+		C3::Event event;
+		while(win.PoolEvent(event))
+		{
+                        //std::cout << "Event !" << std::endl;
+			if(event.Type == C3::Event::Closed)
+			{
+				std::cout << "Close ... " << std::endl;
+				win.Close();
+			}
+			else if(event.Type == C3::Event::KeyPressed)
+			{
+				if(event.Key.Code == C3::Key::Escape)
+				{
+					std::cout << "Close ... " << std::endl;
+					win.Close();
+				}
+			}
+		}
+
+		// Update
+		PezUpdate(win.GetFrameTime());
+
+		// Draw the scene
+		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+
+		glMatrixMode( GL_MODELVIEW );
+		glLoadIdentity( );
+
+		gluLookAt(3,4,2,0,0,0,0,0,1);
+
+
+
+		// Swap buffers
+		win.Display();
+	}
+
+	std::cout << "... End" << std::endl;
+	return 0;
 }
