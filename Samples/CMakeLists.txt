@@ -1,4 +1,5 @@
 ADD_SUBDIRECTORY(OpenGL2)
+ADD_SUBDIRECTORY(OpenGL4)
 
 #
 # Samples
