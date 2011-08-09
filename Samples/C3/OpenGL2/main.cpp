@@ -1,5 +1,4 @@
 #include <iostream>
-#include <gl/glew.h>
 #include <C3/Window.h>
 
 

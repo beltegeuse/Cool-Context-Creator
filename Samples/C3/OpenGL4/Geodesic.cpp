@@ -1,10 +1,25 @@
-#include <C3/Window.h>
+////////////
+/// Includes
+////////////
+// *** OpenGL
+#ifdef WIN32
+#include <GL/glew.h>
+#else
+#define GL3_PROTOTYPES 1
+#include "gl3.h"
+#endif
+#include <GL/gl.h>
+#include <GL/glu.h>
+// *** STD
 #include <iostream>
-#include <gl/glew.h>
-#include <glsw.h>
-#include <vectormath.h>
 #include <stdarg.h>
 #include <stdio.h>
+// *** C3
+#include <C3/Window.h>
+// *** Others
+#include <vectormath.h>
+#include <glsw.h>
+
 
 
 static void CreateIcosahedron();
@@ -67,7 +82,7 @@ void PezRender(GLuint fbo)
     glDrawElements(GL_PATCHES, IndexCount, GL_UNSIGNED_INT, 0);
 }
 
-const char* PezInitialize(int width, int height)
+void PezInitialize(int width, int height)
 {
     TessLevelInner = 3;
     TessLevelOuter = 2;
@@ -93,8 +108,6 @@ const char* PezInitialize(int width, int height)
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glClearColor(0.7f, 0.6f, 0.5f, 1.0f);
-
-    return "Tessellation Demo";
 }
 
 static void CreateIcosahedron()
@@ -247,16 +260,6 @@ void PezUpdate(unsigned int elapsedMicroseconds)
     Matrix4 lookAt = M4MakeLookAt(eyePosition, targetPosition, upVector);
     ModelviewMatrix = M4Mul(lookAt, rotation);
     NormalMatrix = M4GetUpper3x3(ModelviewMatrix);
-
-    const int VK_LEFT = 0x25;
-    const int VK_UP = 0x26;
-    const int VK_RIGHT = 0x27;
-    const int VK_DOWN = 0x28;
-
-//    if (PezIsPressing(VK_RIGHT)) TessLevelInner++;
-//    if (PezIsPressing(VK_LEFT))  TessLevelInner = TessLevelInner > 1 ? TessLevelInner - 1 : 1;
-//    if (PezIsPressing(VK_UP))    TessLevelOuter++;
-//    if (PezIsPressing(VK_DOWN))  TessLevelOuter = TessLevelOuter > 1 ? TessLevelOuter - 1 : 1;
 }
 
 void PezHandleMouse(int x, int y, int action)
@@ -274,15 +277,17 @@ int main(int argc, char ** argv)
 
 	// Object Creation
 	C3::Window win;
-	C3::WindowMode mode(800,600);
+	C3::WindowMode mode(600,600);
 	C3::OpenGLContextSettings openGLSettings(4,1);
 
 	// Create the window
 	std::cout << "Creation ..." << std::endl;
 	win.Create(mode,"OpenGL4",openGLSettings);
 
+#ifdef WIN32
 	GLenum err = glewInit();
     PezCheckCondition(GLEW_OK == err, "Error: %s\n", glewGetErrorString(err));
+#endif
 
 	std::cout << "Load ... " << std::endl;
 	std::cout << "   * Effect " << std::endl;
@@ -293,18 +298,7 @@ int main(int argc, char ** argv)
 	PezInitialize(800,600);
 
 	// Initialise OpenGL
-	glViewport(0, 0, 800, 600);
-
-	glMatrixMode( GL_PROJECTION );
-	glLoadIdentity();
-	gluPerspective(45.0f,(GLfloat)800/(GLfloat)600,0.1f,100.0f);
-
-	glShadeModel(GL_SMOOTH);							// Enable Smooth Shading
-	glClearColor(0.0f, 0.0f, 0.0f, 0.5f);				// Black Background
-	glClearDepth(1.0f);									// Depth Buffer Setup
-	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
-	glDepthFunc(GL_LEQUAL);								// The Type Of Depth Testing To Do
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculations
+	//glViewport(0, 0, 800, 600);
 
 	// Draw loop
 	std::cout << "Affichage ..." << std::endl;
@@ -322,16 +316,40 @@ int main(int argc, char ** argv)
 			}
 			else if(event.Type == C3::Event::KeyPressed)
 			{
-				if(event.Key.Code == C3::Key::Escape)
+				switch(event.Key.Code)
 				{
-					std::cout << "Close ... " << std::endl;
-					win.Close();
+					case C3::Key::Escape:
+					{
+						std::cout << "Close ... " << std::endl;
+						win.Close();
+						break;
+					}
+					case C3::Key::Right:
+					{
+						TessLevelInner++;
+						break;
+					}
+					case C3::Key::Left:
+					{
+						TessLevelInner = TessLevelInner > 1 ? TessLevelInner - 1 : 1;
+						break;
+					}
+					case C3::Key::Up:
+					{
+						TessLevelOuter++;
+						break;
+					}
+					case C3::Key::Down:
+					{
+						TessLevelOuter = TessLevelOuter > 1 ? TessLevelOuter - 1 : 1;
+						break;
+					}
 				}
 			}
 		}
 
 		// Update
-		PezUpdate(win.GetFrameTime());
+		PezUpdate(win.GetFrameTime()*1000);
 
 		// Draw the scene
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
@@ -341,7 +359,7 @@ int main(int argc, char ** argv)
 
 		gluLookAt(3,4,2,0,0,0,0,0,1);
 
-
+		PezRender(0);
 
 		// Swap buffers
 		win.Display();
