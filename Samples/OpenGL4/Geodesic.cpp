@@ -3,6 +3,8 @@
 #include <gl/glew.h>
 #include <glsw.h>
 #include <vectormath.h>
+#include <stdarg.h>
+#include <stdio.h>
 
 static void CreateIcosahedron();
 static void LoadEffect();
@@ -27,6 +29,16 @@ static Matrix3 NormalMatrix;
 static ShaderUniforms Uniforms;
 static float TessLevelInner;
 static float TessLevelOuter;
+
+void PezCheckCondition(bool condition, const char* fmt, ...)
+{
+	va_list a;
+	if (condition)
+		return;
+
+	va_start(a, fmt);
+	vprintf(fmt, a);
+}
 
 void PezRender(GLuint fbo)
 {
@@ -72,7 +84,7 @@ const char* PezInitialize(int width, int height)
 
     // Set up the projection matrix:
     const float HalfWidth = 0.6f;
-    const float HalfHeight = HalfWidth * 600.f / 800.f;
+    const float HalfHeight = HalfWidth * 600.f / 600.f;
     ProjectionMatrix = M4MakeFrustum(-HalfWidth, +HalfWidth, -HalfHeight, +HalfHeight, 5, 150);
 
     // Initialize various state:
@@ -153,7 +165,7 @@ static void LoadEffect()
     GLchar compilerSpew[256];
 
     glswInit();
-    glswSetPath("../", ".glsl");
+    glswSetPath("./", ".glsl");
     glswAddDirectiveToken("*", "#version 400");
 
     const char* vsSource = glswGetShader("Geodesic.Vertex");
@@ -161,12 +173,12 @@ static void LoadEffect()
     const char* tesSource = glswGetShader("Geodesic.TessEval");
     const char* gsSource = glswGetShader("Geodesic.Geometry");
     const char* fsSource = glswGetShader("Geodesic.Fragment");
-    const char* msg = "Can't find %s shader.  Does '../BicubicPath.glsl' exist?\n";
-//    PezCheckCondition(vsSource != 0, msg, "vertex");
-//    PezCheckCondition(tcsSource != 0, msg, "tess control");
-//    PezCheckCondition(tesSource != 0, msg, "tess eval");
-//    PezCheckCondition(gsSource != 0, msg, "geometry");
-//    PezCheckCondition(fsSource != 0, msg, "fragment");
+    const char* msg = "Can't find %s shader.  Does '../Geodesic.glsl' exist?\n";
+    PezCheckCondition(vsSource != 0, msg, "vertex");
+    PezCheckCondition(tcsSource != 0, msg, "tess control");
+    PezCheckCondition(tesSource != 0, msg, "tess eval");
+    PezCheckCondition(gsSource != 0, msg, "geometry");
+    PezCheckCondition(fsSource != 0, msg, "fragment");
 
     GLuint vsHandle = glCreateShader(GL_VERTEX_SHADER);
     GLuint tcsHandle = glCreateShader(GL_TESS_CONTROL_SHADER);
@@ -178,31 +190,31 @@ static void LoadEffect()
     glCompileShader(vsHandle);
     glGetShaderiv(vsHandle, GL_COMPILE_STATUS, &compileSuccess);
     glGetShaderInfoLog(vsHandle, sizeof(compilerSpew), 0, compilerSpew);
-//    PezCheckCondition(compileSuccess, "Vertex Shader Errors:\n%s", compilerSpew);
+    PezCheckCondition(compileSuccess, "Vertex Shader Errors:\n%s", compilerSpew);
 
     glShaderSource(tcsHandle, 1, &tcsSource, 0);
     glCompileShader(tcsHandle);
     glGetShaderiv(tcsHandle, GL_COMPILE_STATUS, &compileSuccess);
     glGetShaderInfoLog(tcsHandle, sizeof(compilerSpew), 0, compilerSpew);
-//    PezCheckCondition(compileSuccess, "Tess Control Shader Errors:\n%s", compilerSpew);
+    PezCheckCondition(compileSuccess, "Tess Control Shader Errors:\n%s", compilerSpew);
 
     glShaderSource(tesHandle, 1, &tesSource, 0);
     glCompileShader(tesHandle);
     glGetShaderiv(tesHandle, GL_COMPILE_STATUS, &compileSuccess);
     glGetShaderInfoLog(tesHandle, sizeof(compilerSpew), 0, compilerSpew);
-//    PezCheckCondition(compileSuccess, "Tess Eval Shader Errors:\n%s", compilerSpew);
+    PezCheckCondition(compileSuccess, "Tess Eval Shader Errors:\n%s", compilerSpew);
 
     glShaderSource(gsHandle, 1, &gsSource, 0);
     glCompileShader(gsHandle);
     glGetShaderiv(gsHandle, GL_COMPILE_STATUS, &compileSuccess);
     glGetShaderInfoLog(gsHandle, sizeof(compilerSpew), 0, compilerSpew);
-//    PezCheckCondition(compileSuccess, "Geometry Shader Errors:\n%s", compilerSpew);
+    PezCheckCondition(compileSuccess, "Geometry Shader Errors:\n%s", compilerSpew);
 
     glShaderSource(fsHandle, 1, &fsSource, 0);
     glCompileShader(fsHandle);
     glGetShaderiv(fsHandle, GL_COMPILE_STATUS, &compileSuccess);
     glGetShaderInfoLog(fsHandle, sizeof(compilerSpew), 0, compilerSpew);
-//    PezCheckCondition(compileSuccess, "Fragment Shader Errors:\n%s", compilerSpew);
+    PezCheckCondition(compileSuccess, "Fragment Shader Errors:\n%s", compilerSpew);
 
     ProgramHandle = glCreateProgram();
     glAttachShader(ProgramHandle, vsHandle);
@@ -214,7 +226,7 @@ static void LoadEffect()
     glLinkProgram(ProgramHandle);
     glGetProgramiv(ProgramHandle, GL_LINK_STATUS, &linkSuccess);
     glGetProgramInfoLog(ProgramHandle, sizeof(compilerSpew), 0, compilerSpew);
-//    PezCheckCondition(linkSuccess, "Shader Link Errors:\n%s", compilerSpew);
+    PezCheckCondition(linkSuccess, "Shader Link Errors:\n%s", compilerSpew);
 
     glUseProgram(ProgramHandle);
 }
@@ -265,9 +277,14 @@ int main(int argc, char ** argv)
 	std::cout << "Creation ..." << std::endl;
 	win.Create(mode,"OpenGL4",openGLSettings);
 
+	glewInit();
+
 	std::cout << "Load ... " << std::endl;
+	std::cout << "   * Effect " << std::endl;
 	LoadEffect();
+	std::cout << "   * Geometry " << std::endl;
 	CreateIcosahedron();
+	std::cout << "   * InitPez " << std::endl;
 	PezInitialize(800,600);
 
 	// Initialise OpenGL

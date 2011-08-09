@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <gl/glew.h>
 #include <C3/Window.h>
 
 
@@ -67,7 +67,6 @@ int main(int argc, char ** argv)
 	// Create the window
 	std::cout << "Creation ..." << std::endl;
 	win.Create(mode,"OpenGL2",openGLSettings);
-
 
 	// Initialise OpenGL
 	glViewport(0, 0, 800, 600);
