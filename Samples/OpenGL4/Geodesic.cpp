@@ -6,6 +6,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+
 static void CreateIcosahedron();
 static void LoadEffect();
 
@@ -20,6 +21,7 @@ typedef struct {
     GLuint TessLevelOuter;
 } ShaderUniforms;
 
+static GLuint vao;
 static GLsizei IndexCount;
 static const GLuint PositionSlot = 0;
 static GLuint ProgramHandle;
@@ -138,11 +140,12 @@ static void CreateIcosahedron()
 
     IndexCount = sizeof(Faces) / sizeof(Faces[0]);
 
+    std::cout << "     - Generate VAO" << std::endl;
     // Create the VAO:
-    GLuint vao;
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
+    std::cout << "     - Position buffer" << std::endl;
     // Create the VBO for positions:
     GLuint positions;
     GLsizei stride = 3 * sizeof(float);
@@ -152,6 +155,7 @@ static void CreateIcosahedron()
     glEnableVertexAttribArray(PositionSlot);
     glVertexAttribPointer(PositionSlot, 3, GL_FLOAT, GL_FALSE, stride, 0);
 
+    std::cout << "     - Indice buffer" << std::endl;
     // Create the VBO for indices:
     GLuint indices;
     glGenBuffers(1, &indices);
@@ -271,13 +275,14 @@ int main(int argc, char ** argv)
 	// Object Creation
 	C3::Window win;
 	C3::WindowMode mode(800,600);
-	C3::OpenGLContextSettings openGLSettings(4,0);
+	C3::OpenGLContextSettings openGLSettings(4,1);
 
 	// Create the window
 	std::cout << "Creation ..." << std::endl;
 	win.Create(mode,"OpenGL4",openGLSettings);
 
-	glewInit();
+	GLenum err = glewInit();
+    PezCheckCondition(GLEW_OK == err, "Error: %s\n", glewGetErrorString(err));
 
 	std::cout << "Load ... " << std::endl;
 	std::cout << "   * Effect " << std::endl;
