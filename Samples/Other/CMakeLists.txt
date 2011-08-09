@@ -1,0 +1,9 @@
+#
+# Samples
+#
+IF(WIN32)
+	ADD_SUBDIRECTORY(NeheWin)
+ELSE()
+#	ADD_SUBDIRECTORY(NeheLinux)
+	ADD_SUBDIRECTORY(WikiOpenGLLinux)
+ENDIF()
