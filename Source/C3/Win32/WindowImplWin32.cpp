@@ -4,6 +4,9 @@
 #include <C3/Trace.h>
 
 // OpenGL includes
+#ifdef MSVC
+#include <windows.h>
+#endif
 #include <GL/gl.h>
 #include <C3/glext/wglext.h>
 
