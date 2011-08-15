@@ -36,6 +36,7 @@ public:
 	virtual void Display();
 	virtual void Show(bool show);
 	virtual void SetTitle(const std::string& title);
+	virtual void EnableKeyRepeat(bool enabled);
 
 private:
 	/*

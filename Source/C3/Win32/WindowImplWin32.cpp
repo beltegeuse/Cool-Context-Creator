@@ -271,6 +271,11 @@ LRESULT CALLBACK WindowImplWin32::GlobalOnEvent(HWND handle, UINT message,
 	return DefWindowProc(handle, message, wParam, lParam);
 }
 
+void WindowImplWin32::EnableKeyRepeat(bool enabled)
+{
+	m_KeyRepeatEnabled = enabled;
+}
+
 ////////////////////////////////////////////////////////////
 void WindowImplWin32::ProcessEvents(bool block)
 {

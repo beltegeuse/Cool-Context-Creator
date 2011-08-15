@@ -43,6 +43,7 @@ public:
 	virtual void ProcessEvents(bool block);
 	virtual void SetTitle(const std::string& title);
 	virtual void Show(bool show);
+	virtual void EnableKeyRepeat(bool enabled);
 
 private:
 	/*
