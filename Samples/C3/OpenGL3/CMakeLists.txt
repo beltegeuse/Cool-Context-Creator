@@ -1,6 +1,23 @@
 SET(OpenGL3Test_SRC
 	main.cpp
+	
+	### Gle
+	glload/gll_gl_core.c  
+	glload/gll_gl_ext.c  
+	glload/gll.cpp
 )
+
+IF(WIN32)
+SET(OpenGL3Test_SRC
+	${OpenGL3Test_SRC}
+	glload/wgll_ext.c
+)
+ELSE(WIN32)
+SET(OpenGL3Test_SRC 
+	${OpenGL3Test_SRC}
+	glload/glxl_ext.c
+)
+ENDIF(WIN32)
 
 
 INCLUDE_DIRECTORIES(
