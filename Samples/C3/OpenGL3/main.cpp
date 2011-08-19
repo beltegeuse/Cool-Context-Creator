@@ -5,7 +5,7 @@
 #include <windows.h>
 #endif
 #include <glload/gl_3_2_comp.h>
-
+#include <glload/gll.h>
 
 GLuint CreateShader(GLenum eShaderType, const std::string &strShaderFile)
 {
@@ -134,6 +134,13 @@ int main(int argc, char ** argv)
 	// Create the window
 	std::cout << "Creation ..." << std::endl;
 	win.Create(mode,"OpenGL3",openGLSettings);
+
+	// Init OpenGL 3
+	int glloadErr = glload::LoadFunctions();
+	if(glloadErr != glload::LS_LOAD_FUNCTIONS_ALL)
+	{
+		std::cerr << "[Warning] Error on loading OpenGL functions. \n";
+	}
 
 	init();
 
