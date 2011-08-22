@@ -15,4 +15,4 @@ target_link_libraries(
   C3
 )
 
-install(TARGETS FullScreenTest RUNTIME DESTINATION ${C3_BINARY_DIR})
+install(TARGETS FullScreenTest RUNTIME DESTINATION ${CMAKE_BINARY_DIR})

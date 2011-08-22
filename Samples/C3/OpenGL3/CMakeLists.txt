@@ -32,4 +32,4 @@ target_link_libraries(
   C3
 )
 
-install(TARGETS OpenGL3Test RUNTIME DESTINATION ${C3_BINARY_DIR})
+install(TARGETS OpenGL3Test RUNTIME DESTINATION ${CMAKE_BINARY_DIR})
