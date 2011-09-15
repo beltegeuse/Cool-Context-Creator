@@ -106,7 +106,7 @@ WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 	  GLX_ALPHA_SIZE      , 8,
 	  GLX_DEPTH_SIZE      , settings.DepthBits,
 	  GLX_STENCIL_SIZE    , settings.StentilBits,
-	  GLX_DOUBLEBUFFER    , True,
+          GLX_DOUBLEBUFFER    , True,
 	  //GLX_SAMPLE_BUFFERS  , 1,
 	  //GLX_SAMPLES         , 4,
 	  None
@@ -180,13 +180,18 @@ WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 	swa.background_pixmap = None ;
 	swa.border_pixel      = 0;
 	swa.event_mask        = eventMask; //StructureNotifyMask
-	//swa = fullscreen; //TODO: For fullscreen
+        swa.override_redirect = mode.Fullscreen; //TODO: For fullscreen
 
 	TRACE( "Creating window" );
-	m_Window = XCreateWindow( m_Display, RootWindow( m_Display, vi->screen ),
-							  0, 0, mode.Width, mode.Height, 0, vi->depth, InputOutput,
-							  vi->visual,
-							  CWBorderPixel|CWColormap|CWEventMask, &swa );
+        m_Window = XCreateWindow( m_Display,
+                                  RootWindow( m_Display, vi->screen ),
+                                  0, 0,
+                                  mode.Width, mode.Height,
+                                  0,
+                                  vi->depth,
+                                  InputOutput,
+                                  vi->visual,
+                                  CWBorderPixel|CWColormap|CWEventMask|CWOverrideRedirect, &swa );
 	if ( !m_Window )
 		throw new CException( "Failed to create window." );
 
