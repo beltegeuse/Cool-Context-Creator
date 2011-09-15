@@ -85,6 +85,7 @@ WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 		const std::string& name, const OpenGLContextSettings& settings) :
 	m_Display(NULL),m_InputMethod (NULL),
 	m_InputContext(NULL),m_AtomClose (0),
+        m_OldVideoMode(-1),
 	m_KeyRepeat(true)
 {
 	m_Display = XOpenDisplay(NULL);
@@ -168,6 +169,9 @@ WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 	/*
 	 * Create window
 	 */
+        if(mode.Fullscreen)
+            SwitchToFullscreen(mode.Width,mode.Height);
+
 	TRACE( "Creating colormap" );
 	XSetWindowAttributes swa;
 	swa.colormap = m_Colormap = XCreateColormap( m_Display,
@@ -411,7 +415,7 @@ void WindowImplLinux::SwitchToFullscreen(int width, int height)
         {
             // Get the current rotation
             Rotation currentRotation;
-            SizeID myOldVideoMode = XRRConfigCurrentConfiguration(config, &currentRotation);
+            m_OldVideoMode = XRRConfigCurrentConfiguration(config, &currentRotation);
 
             // Get the available screen sizes
             int nbSizes;
@@ -450,12 +454,41 @@ void WindowImplLinux::SwitchToFullscreen(int width, int height)
 
 WindowImplLinux::~WindowImplLinux() {
 	// TODO: Faire la gestion d'erreur (Voir SFML)
+        CleanUp();
 	glXMakeCurrent(m_Display, 0, 0);
 	glXDestroyContext(m_Display, m_Context);
 
 	XDestroyWindow(m_Display, m_Window);
 	XFreeColormap(m_Display, m_Colormap);
 	XCloseDisplay( m_Display);
+}
+
+void WindowImplLinux::CleanUp(){
+    // Restore the previous video mode (in case we were running in fullscreen)
+    if (m_OldVideoMode != -1)
+    {
+        // Get current screen info
+        XRRScreenConfiguration* config = XRRGetScreenInfo(m_Display, RootWindow(m_Display, DefaultScreen(m_Display)));
+        if (config)
+        {
+            std::cout << "toto" << std::endl;
+            // Get the current rotation
+            Rotation currentRotation;
+            XRRConfigCurrentConfiguration(config, &currentRotation);
+
+            // Reset the video mode
+            XRRSetScreenConfig(m_Display, config, RootWindow(m_Display, DefaultScreen(m_Display)), m_OldVideoMode, currentRotation, CurrentTime);
+
+            // Free the configuration instance
+            XRRFreeScreenConfigInfo(config);
+        }
+
+        // Reset the fullscreen window
+        m_OldVideoMode = -1;
+    }
+
+    // Unhide the mouse cursor (in case it was hidden)
+   // ShowMouseCursor(true);
 }
 
 void WindowImplLinux::Display() {

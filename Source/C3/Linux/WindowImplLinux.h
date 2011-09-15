@@ -27,6 +27,7 @@ private:
 	Atom       m_AtomClose;           ///< Atom used to identify the close event
 	XIC        m_InputContext;        ///< Input context used to get unicode input in our window
 	XIM        m_InputMethod;         ///< Input method linked to the X display
+        int        m_OldVideoMode;        ///< In order to reset the screen when we leave the fullscreen
 	bool m_KeyRepeat;
 public:
 	/*
@@ -52,6 +53,7 @@ private:
 	bool ProcessEvent(XEvent windowEvent);
 	static Key::Code KeysymToSF(KeySym symbol);
         void SwitchToFullscreen(int width, int height);
+        void CleanUp();
 };
 
 // Namespaces ends
