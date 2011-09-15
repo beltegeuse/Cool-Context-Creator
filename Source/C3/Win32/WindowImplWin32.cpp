@@ -4,6 +4,9 @@
 #include <C3/Trace.h>
 
 // OpenGL includes
+#ifdef MSVC
+#include <windows.h>
+#endif
 #include <GL/gl.h>
 #include <C3/glext/wglext.h>
 
@@ -269,6 +272,11 @@ LRESULT CALLBACK WindowImplWin32::GlobalOnEvent(HWND handle, UINT message,
 
 
 	return DefWindowProc(handle, message, wParam, lParam);
+}
+
+void WindowImplWin32::EnableKeyRepeat(bool enabled)
+{
+	m_KeyRepeatEnabled = enabled;
 }
 
 ////////////////////////////////////////////////////////////

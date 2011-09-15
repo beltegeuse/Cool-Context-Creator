@@ -107,6 +107,11 @@ public:
          */
 	void Close();
 
+	/*
+	 * To enable key repeat
+	 */
+	void EnableKeyRepeat(bool enabled);
+
 	// Events
 	bool PoolEvent(Event& event);
 

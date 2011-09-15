@@ -76,11 +76,16 @@ Bool CheckEvent(::Display*, XEvent* event, XPointer userData)
 	return event->xany.window == reinterpret_cast< ::Window >(userData);
 }
 
+void WindowImplLinux::EnableKeyRepeat(bool enabled)
+{
+	m_KeyRepeat = enabled;
+}
+
 WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 		const std::string& name, const OpenGLContextSettings& settings) :
 	m_Display(NULL),m_InputMethod (NULL),
 	m_InputContext(NULL),m_AtomClose (0),
-	m_KeyRepeat(false)
+	m_KeyRepeat(true)
 {
 	m_Display = XOpenDisplay(NULL);
 

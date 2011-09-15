@@ -41,6 +41,12 @@ void Window::Display()
 		m_Window->Display();
 }
 
+void Window::EnableKeyRepeat(bool enabled)
+{
+	if(m_Window)
+		m_Window->EnableKeyRepeat(enabled);
+}
+
 bool Window::PoolEvent(Event& event)
 {
 	if (!m_Window)

@@ -1,6 +1,23 @@
 SET(OpenGL3Test_SRC
 	main.cpp
+	
+	### Gle
+	glload/gll_gl_core.c  
+	glload/gll_gl_ext.c  
+	glload/gll.cpp
 )
+
+IF(WIN32)
+SET(OpenGL3Test_SRC
+	${OpenGL3Test_SRC}
+	glload/wgll_ext.c
+)
+ELSE(WIN32)
+SET(OpenGL3Test_SRC 
+	${OpenGL3Test_SRC}
+	glload/glxl_ext.c
+)
+ENDIF(WIN32)
 
 
 INCLUDE_DIRECTORIES(
@@ -15,9 +32,4 @@ target_link_libraries(
   C3
 )
 
-SET_TARGET_PROPERTIES(OpenGL3Test PROPERTIES
-  INSTALL_RPATH ${PROJECT_BUILD_PATH}
-  INSTALL_RPATH_USE_LINK_PATH true
-)
-
-install(TARGETS OpenGL3Test RUNTIME DESTINATION ${PROJECT_BUILD_PATH})
+install(TARGETS OpenGL3Test RUNTIME DESTINATION ${CMAKE_BINARY_DIR})

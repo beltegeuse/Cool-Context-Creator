@@ -1,4 +1,4 @@
-PROJECT(Cool-Context-Creator)
+project(C3)
 
 #------- Configuration ------------
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
@@ -12,7 +12,6 @@ SET( BUILD_SAMPLES_C3 ON CACHE BOOL "If you want build samples related to C3.")
 
 
 # -- Dependancies
-MESSAGE("Dependancies search ... ")
 FIND_PACKAGE(OpenGL)
 IF(OPENGL_FOUND)
   MESSAGE(STATUS "Find OpenGL")
@@ -20,8 +19,10 @@ ELSE(OPENGL_FOUND)
   MESSAGE(FATAL_ERROR "You must install OpenGL")
 ENDIF(OPENGL_FOUND)
 
-# * -- To install project ---
-SET(PROJECT_BUILD_PATH ${CMAKE_SOURCE_DIR}/Build)
+IF(MSVC)
+	ADD_DEFINITIONS("-DMSVC")
+ENDIF()
 
+# Parse other files
 ADD_SUBDIRECTORY(Source)
 ADD_SUBDIRECTORY(Samples)

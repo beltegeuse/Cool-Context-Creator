@@ -36,6 +36,7 @@ public:
 	virtual void ProcessEvents(bool block) = 0;
 	virtual void SetTitle(const std::string& title) = 0;
 	virtual void Show(bool show) = 0;
+	virtual void EnableKeyRepeat(bool enabled) = 0;
 
 	/*
 	 * Public methods
