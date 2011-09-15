@@ -398,8 +398,7 @@ WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 }
 
 
-// Temporaire, pour tenter de comprendre le fullscreen
-// C/C depuis sfml
+
 void WindowImplLinux::SwitchToFullscreen(int width, int height)
 {
     // Check if the XRandR extension is present
@@ -419,17 +418,15 @@ void WindowImplLinux::SwitchToFullscreen(int width, int height)
             XRRScreenSize* sizes = XRRConfigSizes(config, &nbSizes);
             if (sizes && (nbSizes > 0))
             {
-//                // Search a matching size
+                // Search a matching size
                 for (int i = 0; i < nbSizes; ++i)
                 {
-                    if ((sizes[i].width == static_cast<int>(mode.Width)) && (sizes[i].height == static_cast<int>(mode.Height)))
+                    if ((sizes[i].width == static_cast<int>(width)) && (sizes[i].height == static_cast<int>(height)))
                     {
-//                        // Switch to fullscreen mode
-//                        XRRSetScreenConfig(myDisplay, config, RootWindow(myDisplay, myScreen), i, currentRotation, CurrentTime);
+                        // Switch to fullscreen mode
+                        XRRSetScreenConfig(m_Display, config, RootWindow(m_Display, DefaultScreen(m_Display)), i, currentRotation, CurrentTime);
 
-//                        // Set "this" as the current fullscreen window
-//                        fullscreenWindow = this;
-//                        break;
+                        break;
                     }
                 }
             }
