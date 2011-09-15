@@ -16,6 +16,7 @@
 
 #include <sstream>
 
+#include <X11/extensions/Xrandr.h>
 namespace C3 {
 namespace priv {
 
@@ -247,7 +248,7 @@ WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 			XChangeProperty(m_Display, m_Window, WMHintsAtom, WMHintsAtom, 32, PropModeReplace, ptr, 5);
 		}
 
-		//TODO: A voir si intergration
+                //TODO: A voir si integration
 		// This is a hack to force some windows managers to disable resizing
 //		if (!(style & Style::Resize))
 //		{
@@ -292,6 +293,11 @@ WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 	// Display the window
 	TRACE( "Mapping window" );
 	Show(true);
+
+        if (mode.Fullscreen){ // If fullscreen
+            XGrabPointer(m_Display, m_Window, true, 0, GrabModeAsync, GrabModeAsync, m_Window, None, CurrentTime);
+            XGrabKeyboard(m_Display, m_Window, true, GrabModeAsync, GrabModeAsync, CurrentTime);
+        }
 
 	/*
 	 * OpenGL section
@@ -385,6 +391,60 @@ WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 	TRACE( "Making context current" );
 	glXMakeCurrent( m_Display, m_Window, m_Context );
 }
+
+
+// Temporaire, pour tenter de comprendre le fullscreen
+// C/C depuis sfml
+void WindowImplLinux::SwitchToFullscreen(int width, int height)
+{
+    // Check if the XRandR extension is present
+    int version;
+    if (XQueryExtension(m_Display, "RANDR", &version, &version, &version))
+    {
+        // Get the current configuration
+        XRRScreenConfiguration* config = XRRGetScreenInfo(m_Display, RootWindow(m_Display, DefaultScreen(m_Display)));
+        if (config)
+        {
+            // Get the current rotation
+            Rotation currentRotation;
+            SizeID myOldVideoMode = XRRConfigCurrentConfiguration(config, &currentRotation);
+
+            // Get the available screen sizes
+            int nbSizes;
+            XRRScreenSize* sizes = XRRConfigSizes(config, &nbSizes);
+            if (sizes && (nbSizes > 0))
+            {
+//                // Search a matching size
+                for (int i = 0; i < nbSizes; ++i)
+                {
+                    if ((sizes[i].width == static_cast<int>(mode.Width)) && (sizes[i].height == static_cast<int>(mode.Height)))
+                    {
+//                        // Switch to fullscreen mode
+//                        XRRSetScreenConfig(myDisplay, config, RootWindow(myDisplay, myScreen), i, currentRotation, CurrentTime);
+
+//                        // Set "this" as the current fullscreen window
+//                        fullscreenWindow = this;
+//                        break;
+                    }
+                }
+            }
+
+            // Free the configuration instance
+            XRRFreeScreenConfigInfo(config);
+        }
+        else
+        {
+            // Failed to get the screen configuration
+            std::cout << "[Error] Failed to get the current screen configuration for fullscreen mode, switching to window mode" << std::endl;
+        }
+    }
+    else
+    {
+        // XRandr extension is not supported : we cannot use fullscreen mode
+        std::cout << "[Error] Fullscreen is not supported, switching to window mode" << std::endl;
+    }
+}
+
 
 WindowImplLinux::~WindowImplLinux() {
 	// TODO: Faire la gestion d'erreur (Voir SFML)

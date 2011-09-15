@@ -50,6 +50,7 @@ private:
 	 */
 	bool ProcessEvent(XEvent windowEvent);
 	static Key::Code KeysymToSF(KeySym symbol);
+        void SwitchToFullscreen(int width, int height);
 };
 
 // Namespaces ends

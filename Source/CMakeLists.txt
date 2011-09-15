@@ -64,6 +64,7 @@ target_link_libraries(
   C3
   ${OPENGL_LIBRARY}
   ${GLEW_LIBRARY}
+  ${X11_Xrandr_LIB}
 )
 
 install(TARGETS C3 
