@@ -71,27 +71,6 @@ GLuint CreateProgram(const std::vector<GLuint> &shaderList)
 
 GLuint theProgram;
 
-/*const std::string strVertexShader(
-	"#version 330\n"
-	"layout(location = 0) in vec4 position;\n"
-	"out vec2 pos;\n"
-	"void main()\n"
-	"{\n"
-	"   pos = clamp(position.xy,0,1);"
-	"   gl_Position = position;\n"
-	"}\n"
-);
-
-const std::string strFragmentShader(
-	"#version 330\n"
-	"out vec4 outputColor;\n"
-	"in vec2 pos;\n"
-	"void main()\n"
-	"{\n"
-	"   outputColor = vec4(pos.xy, 1.0f, 1.0f);\n"
-	"}\n"
-	);*/
-
 void InitializeProgram(const std::string vs, const std::string fs)
 {
 	std::vector<GLuint> shaderList;
@@ -201,7 +180,6 @@ int main(int argc, char ** argv)
 		}
 
 		time += (win.GetFrameTime())/1000.f;
-		//		std::cout << time << std::endl;
 
 
 		// Draw the scene

@@ -6,9 +6,11 @@
 #endif
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <C3/Clock.h>
 
-void DisplayCube()
+void DisplayCube(float rot)
 {
+        glRotatef(rot, 0.3f, 0.3f, 0.8f);
 	glBegin(GL_QUADS);
 
 	glColor3ub(255,0,0); //face rouge
@@ -76,7 +78,9 @@ int main(int argc, char ** argv)
 	glClearDepth(1.0f);									// Depth Buffer Setup
 	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
 	glDepthFunc(GL_LEQUAL);								// The Type Of Depth Testing To Do
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculations
+        glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculations
+
+        C3::Clock clock = C3::Clock();
 
 	// Draw loop
 	std::cout << "Affichage ..." << std::endl;
@@ -110,7 +114,7 @@ int main(int argc, char ** argv)
 
 		gluLookAt(3,4,2,0,0,0,0,0,1);
 
-		DisplayCube();
+                DisplayCube((float) clock.GetElapsedTime() / 10.f);
 
 		// Swap buffers
 		win.Display();
