@@ -34,7 +34,7 @@ public:
 	 * Constructors and destructors
 	 */
 	WindowImplLinux(const WindowMode& mode, const std::string& name,
-			const OpenGLContextSettings& settings);
+                        const OpenGLContextSettings& settings, long style = Style::Default);
 	virtual ~WindowImplLinux();
 
 	/*

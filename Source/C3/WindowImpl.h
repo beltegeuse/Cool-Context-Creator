@@ -12,6 +12,26 @@
 
 namespace C3
 {
+
+namespace Style //TODO: put the namespace Style in another file if here is not the right place
+{
+    ////////////////////////////////////////////////////////////
+    /// \ingroup window
+    /// \brief Enumeration of the window styles
+    ///
+    ////////////////////////////////////////////////////////////
+    enum
+    {
+        None       = 0,      ///< No border / title bar (this flag and all others are mutually exclusive)
+        Titlebar   = 1 << 0, ///< Title bar + fixed border
+        Resize     = 1 << 1, ///< Titlebar + resizable border + maximize button
+        Close      = 1 << 2, ///< Titlebar + close button
+        Fullscreen = 1 << 3, ///< Fullscreen mode (this flag and all others are mutually exclusive)
+
+        Default = Titlebar | Resize | Close ///< Default window style
+    };
+}
+
 namespace priv
 {
 class WindowImpl

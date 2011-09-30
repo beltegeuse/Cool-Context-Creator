@@ -82,7 +82,7 @@ void WindowImplLinux::EnableKeyRepeat(bool enabled)
 }
 
 WindowImplLinux::WindowImplLinux(const WindowMode& mode,
-		const std::string& name, const OpenGLContextSettings& settings) :
+                const std::string& name, const OpenGLContextSettings& settings, long style) :
 	m_Display(NULL),m_InputMethod (NULL),
 	m_InputContext(NULL),m_AtomClose (0),
         m_OldVideoMode(-1),
@@ -169,7 +169,7 @@ WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 	/*
 	 * Create window
 	 */
-        if(mode.Fullscreen)
+        if(mode.Fullscreen  || (style & Style::Fullscreen)) //FIXME: Bug with fullscreen when started with style
             SwitchToFullscreen(mode.Width,mode.Height);
 
 	TRACE( "Creating colormap" );
@@ -206,7 +206,7 @@ WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 	 */
 	if (!mode.Fullscreen) // If not fullscreen
 	{
-		Atom WMHintsAtom = XInternAtom(m_Display, "_MOTIF_WM_HINTS", false);
+                Atom WMHintsAtom = XInternAtom(m_Display, "_MOTIF_WM_HINTS", false);
 		if (WMHintsAtom)
 		{
 			static const unsigned long MWM_HINTS_FUNCTIONS = 1 << 0;
@@ -242,21 +242,21 @@ WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 			hints.Functions = 0;
 
 			//TODO: Les tests de la SFML pour activer que certains evenements
-//			if (style & Style::Titlebar)
-//			{
-				hints.Decorations |= MWM_DECOR_BORDER | MWM_DECOR_TITLE | MWM_DECOR_MINIMIZE | MWM_DECOR_MENU;
-				hints.Functions |= MWM_FUNC_MOVE | MWM_FUNC_MINIMIZE;
-//			}
-//			if (style & Style::Resize)
-//			{
-				hints.Decorations |= MWM_DECOR_MAXIMIZE | MWM_DECOR_RESIZEH;
-				hints.Functions |= MWM_FUNC_MAXIMIZE | MWM_FUNC_RESIZE;
-//			}
-//			if (style & Style::Close)
-//			{
-				hints.Decorations |= 0;
-				hints.Functions |= MWM_FUNC_CLOSE;
-//			}
+                        if (style & Style::Titlebar)
+                        {
+                                hints.Decorations |= MWM_DECOR_BORDER | MWM_DECOR_TITLE | MWM_DECOR_MINIMIZE | MWM_DECOR_MENU;
+                                hints.Functions |= MWM_FUNC_MOVE | MWM_FUNC_MINIMIZE;
+                        }
+                        if (style & Style::Resize)
+                        {
+                                hints.Decorations |= MWM_DECOR_MAXIMIZE | MWM_DECOR_RESIZEH;
+                                hints.Functions |= MWM_FUNC_MAXIMIZE | MWM_FUNC_RESIZE;
+                        }
+                        if (style & Style::Close)
+                        {
+                                hints.Decorations |= 0;
+                                hints.Functions |= MWM_FUNC_CLOSE;
+                        }
 
 			const unsigned char* ptr = reinterpret_cast<const unsigned char*>(&hints);
 			XChangeProperty(m_Display, m_Window, WMHintsAtom, WMHintsAtom, 32, PropModeReplace, ptr, 5);
@@ -407,7 +407,6 @@ WindowImplLinux::WindowImplLinux(const WindowMode& mode,
 }
 
 
-
 void WindowImplLinux::SwitchToFullscreen(int width, int height)
 {
     // Check if the XRandR extension is present
@@ -476,7 +475,6 @@ void WindowImplLinux::CleanUp(){
         XRRScreenConfiguration* config = XRRGetScreenInfo(m_Display, RootWindow(m_Display, DefaultScreen(m_Display)));
         if (config)
         {
-            std::cout << "toto" << std::endl;
             // Get the current rotation
             Rotation currentRotation;
             XRRConfigCurrentConfiguration(config, &currentRotation);
