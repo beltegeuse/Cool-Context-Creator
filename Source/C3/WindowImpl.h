@@ -9,6 +9,7 @@
 #include <C3/WindowMode.h>
 #include <C3/OpenGLContextSettings.h>
 #include <C3/Events.h>
+#include <C3/WindowHandle.h>
 
 namespace C3
 {
@@ -48,6 +49,9 @@ public:
 	 */
 	static WindowImpl* Create(const WindowMode& mode, const std::string& name,
 			const OpenGLContextSettings& settings);
+
+        static WindowImpl* Create(WindowHandle handle, const OpenGLContextSettings& settings);
+
 
 	/*
 	 * Public pure virtual functions

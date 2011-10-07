@@ -23,6 +23,16 @@ void Window::Create(const WindowMode& mode, const std::string& name,
 	m_Window = priv::WindowImpl::Create(mode, name, settings);
 }
 
+void Window::Create(WindowHandle handle, const OpenGLContextSettings& settings)
+{
+    // Destroy the previous window implementation
+    Close();
+    m_LastFrameTime = 0;
+    // Recreate the window implementation
+    m_Window = priv::WindowImpl::Create(handle, settings);
+
+}
+
 void Window::Display()
 {
 	// Frame limits

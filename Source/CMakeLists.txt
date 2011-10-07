@@ -49,6 +49,7 @@ INSTALL(FILES
 	C3/WindowMode.h
 	C3/Clock.h
 	C3/Config.h
+	C3/WindowHandle.h
 DESTINATION ${C3_BINARY_DIR}/include/C3)
 
 #

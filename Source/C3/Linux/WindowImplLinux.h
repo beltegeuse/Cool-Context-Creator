@@ -7,6 +7,8 @@
 // X Includes
 #include <X11/Xlib.h>
 #include <GL/glx.h>
+#include <C3/WindowHandle.h>
+
 
 namespace C3
 {
@@ -35,6 +37,7 @@ public:
 	 */
 	WindowImplLinux(const WindowMode& mode, const std::string& name,
                         const OpenGLContextSettings& settings, long style = Style::Default);
+        WindowImplLinux(WindowHandle handle, const OpenGLContextSettings& settings);
 	virtual ~WindowImplLinux();
 
 	/*
@@ -54,6 +57,9 @@ private:
 	static Key::Code KeysymToSF(KeySym symbol);
         void SwitchToFullscreen(int width, int height);
         void CleanUp();
+        void Initialize();
+        void InitializeOpenGLContext(const OpenGLContextSettings& settings);
+        GLXFBConfig GetBestFB(const OpenGLContextSettings& settings) const;
 };
 
 // Namespaces ends

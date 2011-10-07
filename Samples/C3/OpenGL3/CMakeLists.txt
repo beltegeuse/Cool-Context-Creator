@@ -33,3 +33,4 @@ target_link_libraries(
 )
 
 install(TARGETS OpenGL3Test RUNTIME DESTINATION ${CMAKE_BINARY_DIR})
+install(FILES test.vs test.fs DESTINATION ${CMAKE_BINARY_DIR})

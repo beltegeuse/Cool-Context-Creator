@@ -10,6 +10,7 @@
 #include <C3/OpenGLContextSettings.h>
 #include <C3/WindowImpl.h>
 #include <C3/Clock.h>
+#include <C3/WindowHandle.h>
 
 namespace C3
 {
@@ -94,6 +95,10 @@ public:
         */
 	void Create(const WindowMode& mode, const std::string& name,
 			const OpenGLContextSettings& settings = OpenGLContextSettings());
+
+        void Create(WindowHandle handle, const OpenGLContextSettings& settings = OpenGLContextSettings());
+
+
 	// To know if the window is close
         /**
          * In order to know if the window is opened

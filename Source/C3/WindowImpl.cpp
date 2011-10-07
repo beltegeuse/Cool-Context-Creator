@@ -27,6 +27,12 @@ WindowImpl* WindowImpl::Create(const WindowMode& mode, const std::string& name,
 	return new WindowImplType(mode, name, settings);
 }
 
+WindowImpl* WindowImpl::Create(WindowHandle handle, const OpenGLContextSettings& settings)
+{
+        return new WindowImplType(handle,settings );
+}
+
+
 int WindowImpl::GetWidth() const
 {
 	return m_Width;
