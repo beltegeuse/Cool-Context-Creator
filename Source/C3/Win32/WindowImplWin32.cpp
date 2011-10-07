@@ -29,7 +29,21 @@ WindowImplWin32::WindowImplWin32(WindowHandle handle, const OpenGLContextSetting
 	m_OpenGLContext(NULL), m_IsCursorIn(false),
 	m_KeyRepeatEnabled(true)
 {
-	// TODO: Implementation
+	// Connect events
+	if (m_Handle)
+    {
+        // Get window client size
+        /*  RECT rectangle;
+        GetClientRect(m_Handle, &rectangle);
+        myWidth  = rectangle.right - rectangle.left;
+        myHeight = rectangle.bottom - rectangle.top;*/
+
+        // We change the event procedure of the control (it is important to save the old one)
+        SetWindowLongPtr(m_Handle, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
+        //myCallback = SetWindowLongPtr(m_Handle, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&WindowImplWin32::GlobalOnEvent));
+    }
+
+	InitializeOpenGL(settings);
 }
 
 WindowImplWin32::WindowImplWin32(const WindowMode& mode,
@@ -38,7 +52,6 @@ WindowImplWin32::WindowImplWin32(const WindowMode& mode,
 			m_OpenGLContext(NULL), m_IsCursorIn(false),
 			m_KeyRepeatEnabled(true)
 {
-	GLuint PixelFormat; // Holds The Results After Searching For A Match
 	WNDCLASS wc; // Windows Class Structure
 	DWORD dwExStyle; // Window Extended Style
 	DWORD dwStyle; // Window Style
@@ -141,6 +154,36 @@ WindowImplWin32::WindowImplWin32(const WindowMode& mode,
 		throw new CException("Window Creation Error.");
 	}
 
+	InitializeOpenGL(settings, mode.BitsPerPixels);
+
+	Show(true);
+	UpdateWindow(m_Handle);
+	SetForegroundWindow(m_Handle); // Slightly Higher Priority
+	SetFocus(m_Handle); // Sets Keyboard Focus To The Window
+}
+
+WindowImplWin32::~WindowImplWin32()
+{
+	DestroyOpenGLWindow();
+}
+
+void WindowImplWin32::InitializeOpenGL(const OpenGLContextSettings& settings, int bpp)
+{
+	GLuint PixelFormat; // Holds The Results After Searching For A Match
+	
+	if (!(m_DeviceContext = GetDC(m_Handle))) // Did We Get A Device Context?
+	{
+		DestroyOpenGLWindow(); // Reset The Display
+		throw new CException("Can't Create A GL Device Context.");
+	}
+
+	if(bpp == -1)
+	{
+		bpp = GetDeviceCaps(m_DeviceContext, BITSPIXEL);
+		int planes = GetDeviceCaps(m_DeviceContext, PLANES);
+		if(planes > 1)  // if its running at 16 colors
+			bpp = 1 << planes;
+	}
 	/*
 	 * OpenGL context creation
 	 */
@@ -151,7 +194,7 @@ WindowImplWin32::WindowImplWin32(const WindowMode& mode,
 							PFD_SUPPORT_OPENGL | // Format Must Support OpenGL
 							PFD_DOUBLEBUFFER, // Must Support Double Buffering
 					PFD_TYPE_RGBA, // Request An RGBA Format
-					mode.BitsPerPixels, // Select Our Color Depth
+					bpp, // Select Our Color Depth
 					0, 0, 0, 0, 0, 0, // Color Bits Ignored
 					0, // No Alpha Buffer
 					0, // Shift Bit Ignored
@@ -164,12 +207,6 @@ WindowImplWin32::WindowImplWin32(const WindowMode& mode,
 					0, // Reserved
 					0, 0, 0 // Layer Masks Ignored
 			};
-
-	if (!(m_DeviceContext = GetDC(m_Handle))) // Did We Get A Device Context?
-	{
-		DestroyOpenGLWindow(); // Reset The Display
-		throw new CException("Can't Create A GL Device Context.");
-	}
 
 	if (!(PixelFormat = ChoosePixelFormat(m_DeviceContext, &pfd))) // Did Windows Find A Matching Pixel Format?
 	{
@@ -228,16 +265,6 @@ WindowImplWin32::WindowImplWin32(const WindowMode& mode,
 		TRACE("WindowImplWin32::WindowImplWin32 : Disable V-Sync");
 		wglSwapInterval(0);
 	}
-
-	Show(true);
-	UpdateWindow(m_Handle);
-	SetForegroundWindow(m_Handle); // Slightly Higher Priority
-	SetFocus(m_Handle); // Sets Keyboard Focus To The Window
-}
-
-WindowImplWin32::~WindowImplWin32()
-{
-	DestroyOpenGLWindow();
 }
 
 void WindowImplWin32::Show(bool show)

@@ -49,6 +49,7 @@ private:
 			WPARAM wParam, LPARAM lParam);
 	void ProcessEvent(UINT message, WPARAM wParam, LPARAM lParam);
 	void DestroyOpenGLWindow();
+	void InitializeOpenGL(const OpenGLContextSettings& settings, int bpp = -1);
 	Key::Code VirtualKeyCodeToSF(WPARAM key, LPARAM flags);
 };
 
