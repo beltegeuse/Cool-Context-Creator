@@ -23,13 +23,26 @@ SET(LIB_C3_SRCS
 	C3/Clock.cpp
 )
 
+SET(LIB_C3_H
+	C3/Events.h
+	C3/OpenGLContextSettings.h
+	C3/Window.h
+	C3/WindowImpl.h
+	C3/WindowMode.h
+	C3/Clock.h
+	C3/Config.h
+	C3/WindowHandle.h
+)
+
 #
 # Specific platform sources
 #
 IF(WIN32)
 SET(LIB_C3_SRCS
 	${LIB_C3_SRCS}
+	${LIB_C3_H}
 	C3/Win32/WindowImplWin32.cpp
+	C3/Win32/WindowImplWin32.h
 )
 ELSE()
 SET(LIB_C3_SRCS
@@ -42,14 +55,7 @@ ENDIF()
 # Headers Installation
 #
 INSTALL(FILES
-	C3/Events.h
-	C3/OpenGLContextSettings.h
-	C3/Window.h
-	C3/WindowImpl.h
-	C3/WindowMode.h
-	C3/Clock.h
-	C3/Config.h
-	C3/WindowHandle.h
+	${LIB_C3_H}
 DESTINATION ${C3_BINARY_DIR}/include/C3)
 
 #

@@ -27,6 +27,8 @@ public:
 	 */
 	WindowImplWin32(const WindowMode& mode, const std::string& name,
 			const OpenGLContextSettings& settings);
+	WindowImplWin32(WindowHandle handle, const OpenGLContextSettings& settings);
+
 	virtual ~WindowImplWin32();
 
 	/*

@@ -24,6 +24,14 @@ const char* ClsName = "OpenGLPWM";
 #define MAPVK_VK_TO_VSC (0)
 #endif
 
+WindowImplWin32::WindowImplWin32(WindowHandle handle, const OpenGLContextSettings& settings) : 
+	m_Handle(NULL), m_hInstance(NULL), m_DeviceContext(NULL),
+	m_OpenGLContext(NULL), m_IsCursorIn(false),
+	m_KeyRepeatEnabled(true)
+{
+	// TODO: Implementation
+}
+
 WindowImplWin32::WindowImplWin32(const WindowMode& mode,
 		const std::string& name, const OpenGLContextSettings& settings) :
 	m_Handle(NULL), m_hInstance(NULL), m_DeviceContext(NULL),
